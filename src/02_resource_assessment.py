@@ -449,3 +449,29 @@ print("Saved: results/figures/02c_resource_overlap.png")
 print("\n" + "=" * 55)
 print("PHASE 1 COMPLETE — Resource assessment done.")
 print("=" * 55)
+
+# ── DIAGNOSTIC: wind speed cross-check at multiple heights ────
+print("\n" + "=" * 55)
+print("WIND DIAGNOSTIC — Shear extrapolation table")
+print("=" * 55)
+print(f"PVGIS ERA5 mean WS at 10m: {pvgis['WS10m_ms'].mean():.3f} m/s")
+print(f"Alpha (IEC 61400-1):       {ALPHA}")
+print()
+print(f"{'Height (m)':<15} {'WS from PVGIS+shear (m/s)':<28} {'Wind power index'}")
+print("-" * 58)
+for h in [10, 20, 30, 40, 50, 60, 80]:
+    ws_h = pvgis["WS10m_ms"].mean() * (h / 10) ** ALPHA
+    power_index = (ws_h / pvgis["WS10m_ms"].mean()) ** 3
+    print(f"{h:<15} {ws_h:<28.3f} {power_index:.3f}")
+
+print(f"\nRenewables.ninja reported at 50m: {ninja['WS_hub_ms'].mean():.3f} m/s")
+print(f"Ratio ninja/pvgis-extrapolated:   "
+      f"{ninja['WS_hub_ms'].mean() / (pvgis['WS10m_ms'].mean()*(50/10)**ALPHA):.3f}")
+
+# Monthly wind speed comparison
+print(f"\nMonthly mean wind speed at 50m (Ninja MERRA-2):")
+monthly_ninja_ws = ninja["WS_hub_ms"].resample("ME").mean()
+for i, (month, val) in enumerate(zip(months, monthly_ninja_ws)):
+    pvgis_10m_month = pvgis["WS10m_ms"].resample("ME").mean().iloc[i]
+    extrapolated = pvgis_10m_month * (50/10)**ALPHA
+    print(f"  {month}: Ninja={val:.2f} m/s | PVGIS-extrapolated={extrapolated:.2f} m/s")
