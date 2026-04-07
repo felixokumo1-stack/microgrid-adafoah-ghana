@@ -5,11 +5,16 @@
 **Last updated:** April 7, 2026
 
 ## Site
-Siamekome Island is a representative community within the Ada East estuary cluster used for design basis purposes. Geographic and meteorological parameters are based on verified Ada East District data.
+
 - **Coordinates:** 5.7833°N, 0.6333°E (Ada East District, Greater Accra Region, Ghana)
 - **Altitude:** ~2 m asl
 - **Grid connection:** None assumed (off-grid design basis)
 - **Climate:** Köppen Aw (tropical savanna, coastal)
+
+## Site identification note
+- Siamekome Island is used as a representative community within the Ada East estuary
+  cluster for design basis purposes. Geographic and meteorological parameters are
+  based on verified Ada East District data (5.7833°N, 0.6333°E).
 
 ## Load
 - **500 households:** 60% Tier 2 MTF (~200 Wh/day), 40% Tier 3 (~1,000 Wh/day)
@@ -29,13 +34,6 @@ Siamekome Island is a representative community within the Ada East estuary clust
 - **LPSP target:** ≤ 5% (Loss of Power Supply Probability)
 - **Reference:** IEC 62257-9-1 (standalone PV systems — extended to hybrid)
 
-## Solar data
-Solar data: PVGIS TMY (2005–2020 ERA5 basis), not a single year
-Rationale: TMY eliminates single-year anomalies; standard for IEC 62257 feasibility studies
-Solar radiation database: PVGIS-ERA5
-Justification: Superior tropical/coastal accuracy vs SARAH-3 due to ITCZ convective
-cloud regime at 5.78°N; validated for West Africa (Journée et al. 2012)
-
 ## Standards referenced
 - IEC 62257 series (rural electrification systems)
 - IEEE 1562 (guide for array and battery sizing for stand-alone PV)
@@ -50,14 +48,10 @@ cloud regime at 5.78°N; validated for West Africa (Journée et al. 2012)
 - Saline environment: All electrical equipment rated to IEC 60721-3-4 (salt mist Class 4S)
 - Seasonal flooding: PV arrays mounted minimum 1.5m above highest flood level
 
-## Site identification note
-- Siamekome Island is used as a representative community within the Ada East estuary
-  cluster for design basis purposes. Geographic and meteorological parameters are
-  based on verified Ada East District data (5.7833°N, 0.6333°E).
-
 ## Solar resource data
 - Database: PVGIS-ERA5 TMY (2005–2020)
-- Justification: Superior accuracy for tropical/coastal convective cloud regime vs SARAH-3
+- Justification: Superior tropical/coastal accuracy vs SARAH-3 due to ITCZ convective
+cloud regime at 5.78°N; validated for West Africa (Journée et al. 2012)
 - Single-year comparison with SARAH-3 noted as limitation; flagged for sensitivity
 
 ## Wind resource
