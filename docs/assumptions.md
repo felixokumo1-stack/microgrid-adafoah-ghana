@@ -59,3 +59,14 @@ cloud regime at 5.78°N; validated for West Africa (Journée et al. 2012)
 - Wind shear exponent α = 0.12 (IEC 61400-1; coastal flat terrain, Class A)
 - 60 m sensitivity case: to be run in Phase 5
 - Data source: Renewables.ninja (NASA MERRA-2), year 2019
+
+## Wind resource — data source decision
+
+ERA5 (PVGIS): 5.07 m/s mean at 10m → 6.15 m/s at 50m (α=0.12)
+MERRA-2 (Renewables.ninja): 3.54 m/s at 10m → 4.43 m/s at 50m
+
+Primary basis: ERA5 (better validated for West African coastal sites;
+Gbobaniyi et al. 2014, Climate Dynamics)
+Conservative case: MERRA-2 (used in Phase 5 sensitivity analysis)
+Limitation: No ground-measured wind data available; met mast recommended
+for bankable study. ERA5/MERRA-2 uncertainty range: ±20–30%.
