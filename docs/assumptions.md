@@ -116,7 +116,7 @@ Completed: April 2026
 - ITCZ cloud season (Jun–Sep) suppresses solar GHI
 - SW monsoon peak (Jul–Aug) is strongest wind period
 - Resources are partially anti-correlated → hybrid design is justified
-- Pearson correlation (monthly solar vs wind): 
+- Pearson correlation (monthly solar vs wind): - 0.24
 
 ### Design implications confirmed
 1. PV is primary generation source — unambiguous
