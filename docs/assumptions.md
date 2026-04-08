@@ -89,3 +89,38 @@ Config C — PV + Wind (larger) + Battery + Diesel (wind-augmented)
 Wind CF design basis: 16.5% (ERA5, IEC Class III turbine, 50m)
 Wind CF conservative:  5.4% (MERRA-2, same turbine)
 Both cases run in HOMER Phase 3.
+
+## Phase 1 Resource Assessment — Final Summary
+Completed: April 2026
+
+### Solar (PVGIS ERA5 TMY, 2005–2020)
+- Annual GHI:              1,884 kWh/m²/year
+- Daily average GHI (PSH): 5.16 h/day  
+- Max hourly GHI:          992 W/m²
+- Mean ambient temp:       26.3°C
+- PV thermal derating:     −10.5% (NOCT correction, mono-Si, −0.40%/°C)
+- Air density correction:  −3.8% on wind turbine output vs ISA
+
+### Wind (ERA5 primary / MERRA-2 conservative)
+- ERA5 mean WS at 10m:     5.07 m/s
+- ERA5 mean WS at 50m:     6.15 m/s  ← design basis
+- MERRA-2 mean WS at 50m:  4.43 m/s  ← conservative/sensitivity case
+- Weibull k (ERA5, 50m):   3.976
+- Weibull λ (ERA5, 50m):   6.791 m/s
+- Design turbine class:    IEC Class III (rated speed 11 m/s, cut-in 2.5 m/s)
+- Design basis CF:         16.5% (ERA5 + IEC Class III)
+- Conservative CF:          5.4% (MERRA-2 + IEC Class III)
+- Vestas V80 rejected:     turbine-site mismatch (CF 4.2%); wrong wind class
+
+### Key finding — solar–wind complementarity
+- ITCZ cloud season (Jun–Sep) suppresses solar GHI
+- SW monsoon peak (Jul–Aug) is strongest wind period
+- Resources are partially anti-correlated → hybrid design is justified
+- Pearson correlation (monthly solar vs wind): 
+
+### Design implications confirmed
+1. PV is primary generation source — unambiguous
+2. Wind is viable as supplementary source with IEC Class III turbine
+3. Battery must cover evening peak (18:00–21:00) + overnight base load
+4. Diesel is backup only — not primary dispatch
+5. Wind CF uncertainty range (5–17%) → sensitivity analysis required in Phase 5
