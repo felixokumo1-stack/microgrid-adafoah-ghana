@@ -475,3 +475,223 @@ for i, (month, val) in enumerate(zip(months, monthly_ninja_ws)):
     pvgis_10m_month = pvgis["WS10m_ms"].resample("ME").mean().iloc[i]
     extrapolated = pvgis_10m_month * (50/10)**ALPHA
     print(f"  {month}: Ninja={val:.2f} m/s | PVGIS-extrapolated={extrapolated:.2f} m/s")
+
+    # ═══════════════════════════════════════════════════════════════
+# PART 4 — WIND RESOURCE RECONCILIATION
+# Use ERA5 (PVGIS) as primary wind basis; MERRA-2 as conservative case
+# ═══════════════════════════════════════════════════════════════
+
+print("\n" + "=" * 55)
+print("PART 4: WIND RECONCILIATION — ERA5 PRIMARY BASIS")
+print("=" * 55)
+
+# ── 4.1 Extrapolate ERA5 wind from 10m to 50m ────────────────
+# Using power law: v(h) = v_ref * (h/h_ref)^alpha
+# IEC 61400-1:2019, Section 6.3, alpha=0.12 coastal flat terrain
+
+ALPHA  = 0.12
+H_REF  = 10.0
+H_HUB  = 50.0
+
+pvgis["WS50m_ms"] = pvgis["WS10m_ms"] * (H_HUB / H_REF) ** ALPHA
+
+mean_era5_50m  = pvgis["WS50m_ms"].mean()
+mean_merra2_50m = ninja["WS_hub_ms"].mean()
+
+print(f"\nERA5  mean WS at 50m (primary):      {mean_era5_50m:.3f} m/s")
+print(f"MERRA-2 mean WS at 50m (conservative): {mean_merra2_50m:.3f} m/s")
+print(f"Spread (uncertainty range):           "
+      f"{mean_merra2_50m:.2f} – {mean_era5_50m:.2f} m/s")
+
+# ── 4.2 Theoretical capacity factor estimate from ERA5 ───────
+# Using Weibull distribution fitted to ERA5 50m wind speeds.
+# This gives a site-specific CF estimate independent of Ninja's
+# turbine simulation, which was based on underestimated MERRA-2 wind.
+
+ws50_vals = pvgis["WS50m_ms"].values
+
+from scipy.stats import weibull_min
+shape_k50, loc50, scale_lam50 = weibull_min.fit(
+    ws50_vals[ws50_vals > 0.5], floc=0
+)
+
+print(f"\nERA5 50m Weibull fit:")
+print(f"  Shape k  = {shape_k50:.3f}")
+print(f"  Scale λ  = {scale_lam50:.3f} m/s")
+
+# Vestas V80 simplified power curve for CF estimation
+# Cut-in: 4 m/s, Rated: 16 m/s, Cut-out: 25 m/s, Rated power: 2000 kW
+# We use a cubic approximation between cut-in and rated speed
+def vestas_v80_cf(ws):
+    """Normalised capacity factor from wind speed (m/s)."""
+    ws = np.atleast_1d(ws)
+    cf = np.zeros_like(ws, dtype=float)
+    # Between cut-in (4) and rated (16): CF scales as (v^3 - v_ci^3)/(v_r^3 - v_ci^3)
+    mask_partial = (ws >= 4.0) & (ws < 16.0)
+    cf[mask_partial] = (ws[mask_partial]**3 - 4.0**3) / (16.0**3 - 4.0**3)
+    cf[ws >= 16.0] = 1.0    # rated power
+    cf[ws >= 25.0] = 0.0    # cut-out
+    return cf
+
+cf_era5   = vestas_v80_cf(pvgis["WS50m_ms"].values).mean()
+cf_merra2 = vestas_v80_cf(ninja["WS_hub_ms"].values).mean()
+
+print(f"\nEstimated annual CF (ERA5 basis):   {cf_era5*100:.1f}%")
+print(f"Estimated annual CF (MERRA-2 basis): {cf_merra2*100:.1f}%")
+print(f"\nConclusion: Wind CF range = {cf_merra2*100:.0f}% – {cf_era5*100:.0f}%")
+print(f"Design basis (ERA5): {cf_era5*100:.0f}%  |  "
+      f"Conservative (MERRA-2): {cf_merra2*100:.0f}%")
+
+# ── 4.3 Seasonal wind pattern — critical for dispatch ────────
+print(f"\nSeasonal wind pattern (ERA5, 50m):")
+print(f"{'Month':<8} {'WS (m/s)':<12} {'CF est.':<12} {'Season'}")
+print("-" * 50)
+season_map = {
+    1:"Dry NE", 2:"Dry NE", 3:"Transition", 4:"Wet SW",
+    5:"Wet SW", 6:"Wet SW", 7:"Peak SW", 8:"Peak SW",
+    9:"Wet SW", 10:"Transition", 11:"Dry NE", 12:"Dry NE"
+}
+monthly_era5_ws = pvgis["WS50m_ms"].resample("ME").mean()
+for i, (m, ws) in enumerate(zip(months, monthly_era5_ws)):
+    cf_m = vestas_v80_cf(np.array([ws]))[0]
+    season = season_map[i+1]
+    print(f"{m:<8} {ws:<12.2f} {cf_m*100:<12.1f} {season}")
+
+# ── 4.4 Save reconciled wind resource ────────────────────────
+# Add ERA5-extrapolated 50m wind to the solar resource file
+pvgis["WS50m_ERA5_ms"] = pvgis["WS50m_ms"]
+pvgis.to_csv("data/processed/solar_resource.csv")
+
+# Create standalone wind summary for HOMER input
+wind_homer = pd.DataFrame({
+    "timestamp":          pvgis.index,
+    "WS10m_ERA5_ms":      pvgis["WS10m_ms"].values,
+    "WS50m_ERA5_ms":      pvgis["WS50m_ms"].values,
+    "WS50m_MERRA2_ms":    ninja["WS_hub_ms"].values,
+    "cf_wind_MERRA2":     ninja["cf_wind"].values,
+})
+wind_homer.to_csv("data/processed/wind_resource_reconciled.csv", index=False)
+print(f"\nSaved: data/processed/wind_resource_reconciled.csv")
+
+# ── 4.5 Final comparison figure ───────────────────────────────
+fig, axes = plt.subplots(1, 2, figsize=(13, 4))
+fig.suptitle(
+    "Wind Resource Reconciliation — ERA5 vs MERRA-2\n"
+    "Ada East, Ghana | 50m Hub Height",
+    fontsize=11, fontweight="bold"
+)
+
+# Monthly comparison
+ax = axes[0]
+x = np.arange(12)
+w = 0.35
+monthly_merra2 = ninja["WS_hub_ms"].resample("ME").mean()
+ax.bar(x - w/2, monthly_era5_ws.values,   w,
+       label=f"ERA5 (primary, mean={mean_era5_50m:.2f} m/s)",
+       color="#1B4FD8", alpha=0.85)
+ax.bar(x + w/2, monthly_merra2.values, w,
+       label=f"MERRA-2 (conservative, mean={mean_merra2_50m:.2f} m/s)",
+       color="#DC2626", alpha=0.85)
+ax.set_xticks(x)
+ax.set_xticklabels(months, fontsize=8)
+ax.set_ylabel("Wind speed (m/s)")
+ax.set_title("Monthly mean wind speed at 50m", fontsize=9)
+ax.legend(fontsize=8)
+ax.grid(True, alpha=0.3, linestyle="--", axis="y")
+
+# CF comparison bar
+ax = axes[1]
+labels = ["ERA5\n(primary)", "MERRA-2\n(conservative)"]
+cfs    = [cf_era5 * 100, cf_merra2 * 100]
+colors = ["#1B4FD8", "#DC2626"]
+bars = ax.bar(labels, cfs, color=colors, alpha=0.85, width=0.4)
+for bar, val in zip(bars, cfs):
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.3,
+            f"{val:.1f}%", ha="center", va="bottom", fontsize=11,
+            fontweight="bold")
+ax.set_ylabel("Annual capacity factor (%)")
+ax.set_title("Estimated wind CF — design range", fontsize=9)
+ax.set_ylim(0, max(cfs) * 1.3)
+ax.grid(True, alpha=0.3, linestyle="--", axis="y")
+ax.axhspan(cfs[1], cfs[0], alpha=0.1, color="#1B4FD8",
+           label="Uncertainty range")
+ax.legend(fontsize=8)
+
+plt.tight_layout()
+plt.savefig("results/figures/02d_wind_reconciliation.png", dpi=150, bbox_inches="tight")
+plt.show()
+print("Saved: results/figures/02d_wind_reconciliation.png")
+
+print("\n" + "=" * 55)
+print("PHASE 1 FULLY COMPLETE")
+print(f"  Solar PSH:          {avg_daily:.2f} h/day")
+print(f"  Wind WS at 50m:     {mean_merra2_50m:.2f} – {mean_era5_50m:.2f} m/s")
+print(f"  Wind CF range:      {cf_merra2*100:.0f}% – {cf_era5*100:.0f}%")
+print(f"  PV derating:        {(1-mean_derate)*100:.1f}%")
+print(f"  Air density factor: {density_correction:.3f}")
+print("=" * 55)
+
+# ── DIAGNOSTIC: Power curve analysis ─────────────────────────
+import numpy as np
+import matplotlib.pyplot as plt
+
+print("=" * 55)
+print("POWER CURVE DIAGNOSTIC — Vestas V80 vs site wind")
+print("=" * 55)
+
+# Vestas V80 2000 kW power curve parameters
+v_cutin  = 4.0   # m/s — below this: zero output
+v_rated  = 16.0  # m/s — above this: full 2000 kW
+v_cutout = 25.0  # m/s — above this: emergency shutdown
+
+mean_ws_era5   = 6.149  # m/s at 50m
+mean_ws_merra2 = 4.431  # m/s at 50m
+
+print(f"\nVestas V80 cut-in speed:  {v_cutin} m/s")
+print(f"Vestas V80 rated speed:   {v_rated} m/s")
+print(f"Site mean WS (ERA5 50m):  {mean_ws_era5:.2f} m/s")
+print(f"Site mean WS (MERRA2 50m):{mean_ws_merra2:.2f} m/s")
+
+# The core problem: rated speed is 16 m/s but site mean is 6 m/s
+# This turbine is designed for HIGH-WIND sites (North Sea, etc.)
+# At 6 m/s mean, it barely moves above cut-in
+
+print(f"\nAt mean wind speed of {mean_ws_era5:.1f} m/s:")
+cf_at_mean = (mean_ws_era5**3 - v_cutin**3) / (v_rated**3 - v_cutin**3)
+print(f"  CF from cubic law: {cf_at_mean*100:.1f}%")
+print(f"  This turbine needs {v_rated} m/s to reach rated power")
+print(f"  Site wind is {v_rated/mean_ws_era5:.1f}x BELOW rated speed")
+
+# Compare: what turbine is actually designed for this wind regime?
+# IEC Wind Class III: mean WS 6.0–7.5 m/s — LOW WIND turbines
+# Appropriate: Enercon E33 (330kW), rated at ~13 m/s
+# Or small turbines: Bergey Excel 10 (10kW), rated at ~11 m/s
+
+print(f"\n{'─'*50}")
+print(f"APPROPRIATE TURBINE COMPARISON")
+print(f"{'─'*50}")
+turbines = [
+    ("Vestas V80 2000kW",   4.0, 16.0, 25.0, "IEC Class I/II (high wind)"),
+    ("Enercon E33 330kW",   2.5, 13.0, 28.0, "IEC Class II/III (medium wind)"),
+    ("Vestas V27 225kW",    3.5, 14.0, 20.0, "IEC Class II/III"),
+    ("Bergey Excel 15 15kW",2.5, 11.0, None, "Small/IEC Class III (low wind)"),
+    ("Generic 50kW IEC-III",2.5, 11.0, 25.0, "IEC Class III (low wind)"),
+]
+
+print(f"{'Turbine':<28} {'Cut-in':<10} {'Rated':<10} {'CF@6.15m/s':<14} {'Class'}")
+print("-" * 80)
+for name, vci, vr, vco, cls in turbines:
+    if mean_ws_era5 < vci:
+        cf = 0.0
+    elif mean_ws_era5 >= vr:
+        cf = 1.0
+    else:
+        cf = (mean_ws_era5**3 - vci**3) / (vr**3 - vci**3)
+    print(f"{name:<28} {vci:<10.1f} {vr:<10.1f} {cf*100:<14.1f} {cls}")
+
+# The real issue: we need IEC Class III turbines for 6 m/s mean wind
+# Rated speed of 11-13 m/s vs V80's 16 m/s makes an enormous difference
+print(f"\nKey insight:")
+print(f"  V80 at 6.15 m/s: operating at {6.15/16*100:.0f}% of rated speed")
+print(f"  E33 at 6.15 m/s: operating at {6.15/13*100:.0f}% of rated speed")
+print(f"  Power scales as v^3, so position on power curve matters enormously")

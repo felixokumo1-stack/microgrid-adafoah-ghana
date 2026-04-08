@@ -70,3 +70,22 @@ Gbobaniyi et al. 2014, Climate Dynamics)
 Conservative case: MERRA-2 (used in Phase 5 sensitivity analysis)
 Limitation: No ground-measured wind data available; met mast recommended
 for bankable study. ERA5/MERRA-2 uncertainty range: ±20–30%.
+
+## Revised system configurations (post resource assessment)
+
+Config A — PV + Battery + Diesel (solar-dominant, no wind)
+  Rationale: Baseline; strong solar resource (5.16 PSH); simplest O&M
+  
+Config B — PV + Wind + Battery + Diesel (hybrid, balanced)
+  Wind turbine: IEC Class III, 50–100 kW nameplate, rated speed ~11 m/s
+  Rationale: Wind supplements PV during ITCZ cloud season (Jun–Sep)
+              and provides overnight generation
+              
+Config C — PV + Wind (larger) + Battery + Diesel (wind-augmented)
+  Wind turbine: IEC Class III, 100–150 kW nameplate
+  Rationale: Tests whether larger wind fraction reduces LCOE
+             despite higher CAPEX
+
+Wind CF design basis: 16.5% (ERA5, IEC Class III turbine, 50m)
+Wind CF conservative:  5.4% (MERRA-2, same turbine)
+Both cases run in HOMER Phase 3.
