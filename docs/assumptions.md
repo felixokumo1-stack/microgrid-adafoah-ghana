@@ -124,3 +124,26 @@ Completed: April 2026
 3. Battery must cover evening peak (18:00–21:00) + overnight base load
 4. Diesel is backup only — not primary dispatch
 5. Wind CF uncertainty range (5–17%) → sensitivity analysis required in Phase 5
+
+## Load Profile — Final Verified Values (Phase 0/1 corrected)
+Revised: April 2026 — Tier consumption corrected from MTF minimums to 
+typical coastal Ghana values (GOGLA 2022)
+
+| Parameter | Value | Basis |
+|-----------|-------|-------|
+| Tier 2 consumption | 500 Wh/day/HH | GOGLA 2022; ESMAP MTF Ghana |
+| Tier 3 consumption | 1,500 Wh/day/HH | Ghana Energy Commission 2021 |
+| Household daily energy | 450 kWh/day (gross) → 270 kWh/day (after CF=0.6) | |
+| Anchor load daily | ~414 kWh/day | WHO/UNICEF; GOGLA PRO 2022 |
+| Peak system demand | 51.5 kW | Script verified |
+| Peak system demand | 51.5 kW at 08:00 | Coincidence peak: full anchor loads + morning household routine |
+| Secondary peak | 44.5 kW at 18:00 | Evening household peak as anchor loads wind down |
+| Critical design period | 08:00 morning (solar gap) | Battery must cover ~27.5 kW deficit for 1–2h at partial solar |
+| Critical design period | 18:00–06:00 (no solar) | Battery must cover evening peak + overnight base load |
+| Average demand | 28.5 kW | Script verified |
+| Load factor | 0.553 | Script verified |
+| Annual energy | 249,660 kWh/year | CSV round-trip verified |
+| Daily average | 684 kWh/day | Script verified |
+| HOMER battery search range | 150–450 kWh LFP nameplate | Revised from 400–900 |
+| Pre-optimisation LCOE | EUR 0.36–0.46/kWh | At full EUR 500k CAPEX |
+| Diesel-only alternative | EUR 0.35–0.55/kWh | ESMAP 2023 benchmark |
