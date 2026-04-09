@@ -105,7 +105,7 @@ print(f"  Round-trip η:   94%")
 print(f"  Lifetime:       15 years")
 print(f"  Cost:           EUR 40,000/unit capital (EUR 400/kWh)")
 print(f"               EUR 800/unit/yr O&M (2% of capital)")
-print(f"  Search space:   2, 4, 6, 8, 10 units (200–1000 kWh)")
+print(f"  Search space:   1, 2, 3, 4, 5, 6, 7, 8, 9, 10 units (100–1000 kWh)")
 
 print(f"\nDIESEL GENERATOR:")
 print(f"  Sizes to test:  40, 60, 80 kW")

@@ -147,3 +147,10 @@ typical coastal Ghana values (GOGLA 2022)
 | HOMER battery search range | 150–450 kWh LFP nameplate | Revised from 400–900 |
 | Pre-optimisation LCOE | EUR 0.36–0.46/kWh | At full EUR 500k CAPEX |
 | Diesel-only alternative | EUR 0.35–0.55/kWh | ESMAP 2023 benchmark |
+
+## Simulation tool
+- Tool: HOMER Pro (v2.81 or later), student academic licence
+- Rationale: Off-grid optimisation primary use case; full battery cycling model;
+  detailed LPSP analysis; generator dispatch constraints
+- HOMER Grid rejected: designed for grid-connected DER, not off-grid primary
+
