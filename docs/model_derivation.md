@@ -286,21 +286,3 @@ Updated LCOE formula (full):
 FLAG: Replacement costs will be calculated with actual sized capacities
 in Phase 5. Placeholder formula established here.
 
-## Load Profile — Final Verified Values (Phase 0/1 corrected)
-Revised: April 2026 — Tier consumption corrected from MTF minimums to 
-typical coastal Ghana values (GOGLA 2022)
-
-| Parameter | Value | Basis |
-|-----------|-------|-------|
-| Tier 2 consumption | 500 Wh/day/HH | GOGLA 2022; ESMAP MTF Ghana |
-| Tier 3 consumption | 1,500 Wh/day/HH | Ghana Energy Commission 2021 |
-| Household daily energy | 450 kWh/day (gross) → 270 kWh/day (after CF=0.6) | |
-| Anchor load daily | ~414 kWh/day | WHO/UNICEF; GOGLA PRO 2022 |
-| Peak system demand | 51.5 kW | Script verified |
-| Average demand | 28.5 kW | Script verified |
-| Load factor | 0.553 | Script verified |
-| Annual energy | 249,660 kWh/year | CSV round-trip verified |
-| Daily average | 684 kWh/day | Script verified |
-| HOMER battery search range | 150–450 kWh LFP nameplate | Revised from 400–900 |
-| Pre-optimisation LCOE | EUR 0.36–0.46/kWh | At full EUR 500k CAPEX |
-| Diesel-only alternative | EUR 0.35–0.55/kWh | ESMAP 2023 benchmark |
