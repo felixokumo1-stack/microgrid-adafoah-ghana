@@ -154,3 +154,120 @@ typical coastal Ghana values (GOGLA 2022)
   detailed LPSP analysis; generator dispatch constraints
 - HOMER Grid rejected: designed for grid-connected DER, not off-grid primary
 
+## Config A cost basis (revised after HOMER calibration)
+- PV installed cost:    EUR 1,200/kW (includes mounting, wiring, 
+                        island logistics, commissioning)
+- Battery capital:      EUR 350/kWh (EUR 35,000/100kWh unit)
+- Battery throughput:   450,000 kWh (≈5,625 cycles at 80% DoD — upper LFP range)
+- Generator capital:    EUR 700/kW (sound-attenuated, industrial grade)
+- Converter capital:    EUR 350/kW (bidirectional, island installation)
+- Dispatch strategy:    Cycle Charging (HOMER optimal)
+- Config A LCOE:        EUR 0.287/kWh (CC) / EUR 0.291/kWh (LF sensitivity)
+- Config A CAPEX:       EUR 446,500
+- Config A Ren. frac:   86.5% (CC) / 91.3% (LF)
+
+## Component Cost Basis — All Configurations
+Basis: Installed system cost, Ada East island site, April 2026
+
+### Solar PV (Generic flat plate, fixed tilt)
+- Capital:      EUR 1,200/kWp installed
+  Breakdown:    Modules ~EUR 180/kWp + Mounting/BOS ~EUR 320/kWp
+                + Boat transport/logistics ~EUR 200/kWp
+                + Installation labour ~EUR 300/kWp
+                + Commissioning ~EUR 200/kWp
+- Replacement:  EUR 1,000/kWp (modules + labour, no new civil works)
+- O&M:          EUR 12/kWp/year (cleaning, inspection, minor repairs)
+- Derating:     68.7% (PR = η_inv × f_temp × f_soil, Phase 2 derived)
+- Lifetime:     25 years
+- Source:       IRENA 2023 small island systems; Ghana contractor quotes basis
+
+### Battery Storage (LFP, 100 kWh units)
+- Capital:      EUR 35,000/unit (EUR 350/kWh)
+- Replacement:  EUR 28,000/unit (EUR 280/kWh — cost decline by replacement year)
+- O&M:          EUR 400/unit/year
+- Throughput:   450,000 kWh/unit (≈5,625 cycles at 80% DoD — upper LFP range)
+                FLAG: Conservative estimate would be 350,000 kWh (4,375 cycles)
+                Sensitivity case in Phase 5
+- Lifetime:     15 years (calendar limit)
+- Source:       BNEF 2023; IRENA 2023 Africa storage costs
+
+### Diesel Generator (Sound-attenuated, industrial)
+- Capital:      EUR 700/kW installed
+  Rationale:    Remote island site; sound attenuation for community acceptance;
+                includes transport, installation, commissioning
+- Replacement:  EUR 600/kW
+- O&M:          EUR 0.08/operating hour
+- Fuel price:   EUR 1.44/L (USD 1.56 ÷ 1.08, NPA Ghana April 2026)
+- Fuel curve:   a = 0.0811 L/hr/kW, b = 0.2450 L/hr/kW (EPA Tier 2)
+- Min load:     30%
+- Lifetime:     15,000 hours
+- Source:       Generator supplier Africa quotes; EPA Tier 2 spec
+
+### Bidirectional Converter
+- Capital:      EUR 350/kW installed
+- Replacement:  EUR 300/kW
+- O&M:          EUR 10/kW/year
+- Efficiency:   96% inverter, 96% rectifier
+- Lifetime:     15 years
+- Source:       SMA/Victron island installation quotes
+
+### System-level
+- Dispatch:         Cycle Charging (all configurations)
+- Operating reserve: 10% load + 25% PV + 50% wind (Config B/C)
+- Max capacity shortage: 5%
+- Project lifetime: 20 years
+- Discount rate:    8% base, 12% sensitivity
+
+## Dispatch Strategy Rationale — Cycle Charging selected
+
+Cycle Charging (CC) selected over Load Following (LF) for Config A–C.
+
+Technical justification:
+1. When generator runs under CC, it charges battery to full capacity —
+   fewer generator starts per year, reducing wear on a remote site
+   where maintenance is difficult (limited local O&M capacity constraint)
+2. CC reduces battery cycling depth variance, extending cycle life
+3. Lower NPC: CC ranks first in HOMER (EUR 703,858 vs EUR 709,972 for LF)
+4. ESMAP mini-grid design guide recommends CC for sites with limited
+   O&M capacity (ESMAP 2019, Mini Grids for Half a Billion People)
+
+LF documented as sensitivity case:
+- LCOE: EUR 0.291/kWh (+1.4% vs CC)
+- Renewable fraction: 91.3% (+4.8 percentage points vs CC)
+- Trade-off: marginally cleaner but higher 20-year cost
+
+## Config A — HOMER Pro Optimisation Results
+
+### Budget-constrained optimum (Path 2 — recommended)
+| Component | Size | Cost |
+|-----------|------|------|
+| PV array | 200 kWp | EUR 240,000 |
+| Battery (LFP) | 4 × 100 kWh = 400 kWh | EUR 140,000 |
+| Diesel generator | 60 kW | EUR 42,000 |
+| Converter | 70 kW | EUR 24,500 |
+| **Total CAPEX** | | **EUR 446,500** |
+
+| KPI | Value |
+|-----|-------|
+| NPC | EUR 703,858 |
+| LCOE | EUR 0.287/kWh |
+| Renewable fraction | 86.5% |
+| Annual fuel consumption | 11,461 L/yr |
+| Annual fuel cost | EUR 16,504/yr |
+| Battery autonomy | 11.2 hours |
+| Capacity shortage | 0 kWh/yr (LPSP = 0%) |
+| Dispatch | Cycle Charging |
+| Budget utilisation | EUR 446,500 / 500,000 = 89.3% |
+| Contingency remaining | EUR 53,500 (10.7%) |
+
+### Unconstrained optimum (Path 1 — reference only)
+250 kWp / 60 kW gen / 400 kWh battery / 60 kW converter / LF
+LCOE EUR 0.258/kWh | CAPEX EUR 503,000 | Ren. frac. 97.0%
+Exceeds budget by EUR 3,000 — not selected as primary result.
+Noted as reference: EUR 3,000 budget flexibility would reduce
+LCOE by EUR 0.029/kWh (10.1% improvement).
+
+### Config A vs diesel-only baseline
+Diesel-only LCOE (ESMAP 2023): EUR 0.35–0.55/kWh
+Config A LCOE: EUR 0.287/kWh
+Cost reduction vs diesel: 18–48%
