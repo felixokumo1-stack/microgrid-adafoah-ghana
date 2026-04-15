@@ -271,3 +271,40 @@ LCOE by EUR 0.029/kWh (10.1% improvement).
 Diesel-only LCOE (ESMAP 2023): EUR 0.35–0.55/kWh
 Config A LCOE: EUR 0.287/kWh
 Cost reduction vs diesel: 18–48%
+
+## Config B — HOMER Pro Optimisation Results
+
+### Optimal configuration
+| Component | Size | CAPEX |
+|-----------|------|-------|
+| PV array | 150 kWp | EUR 180,000 |
+| Wind turbine | 1 × 50 kW IEC Class III | EUR 75,000 |
+| Battery (LFP) | 3 × 100 kWh = 300 kWh | EUR 105,000 |
+| Diesel generator | 60 kW | EUR 42,000 |
+| Converter | 60 kW | EUR 21,000 |
+| **Total CAPEX** | | **EUR 423,000** |
+
+| KPI | Value |
+|-----|-------|
+| NPC | EUR 555,700 |
+| LCOE | EUR 0.227/kWh |
+| Renewable fraction | 97.6% |
+| Annual fuel | 2,968 L/yr |
+| Annual fuel cost | EUR 4,273/yr |
+| Battery autonomy | 8.4 hours |
+| Capacity shortage | 0 kWh/yr |
+| Dispatch | Load Following |
+| Budget utilisation | EUR 423,000 / 500,000 = 84.6% |
+| Contingency | EUR 77,000 (15.4%) |
+
+### Config A vs Config B improvement
+- LCOE reduction: EUR 0.287 → EUR 0.227 = −21.3%
+- NPC reduction: EUR 703,858 → EUR 555,700 = −EUR 148,158
+- Fuel reduction: 11,461 → 2,968 L/yr = −74.1%
+- Key driver: 50 kW wind offsets overnight diesel,
+  enables 50 kWp PV and 100 kWh battery downsizing
+
+### High-renewable sensitivity (Rank 3)
+180 kWp + 1 wind + 300 kWh + 60 kW gen / LF
+LCOE EUR 0.228/kWh | CAPEX EUR 459,000 | Ren. frac. 99.0% | Fuel 1,194 L/yr
+Recommended for donor reporting as near-zero-diesel scenario.
