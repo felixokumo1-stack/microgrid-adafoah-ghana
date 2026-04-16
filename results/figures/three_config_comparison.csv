@@ -1,0 +1,4 @@
+Config,PV_kWp,Wind_kW,Battery_kWh,Generator_kW,Dispatch,NPC_EUR,LCOE_EUR_kWh,Ren_frac_pct,Annual_fuel_L,Annual_fuel_cost_EUR,CAPEX_EUR,Budget_remaining_EUR,Cap_shortage_kWh
+A,200,0,400,60,CC,703858,0.287,86.5,11461,16504,446500,53500,0
+B,150,50,300,60,LF,555700,0.227,97.6,2968,4273,423000,77000,0
+C,120,100,200,60,LF,570385,0.233,97.9,2580,3714,427000,73000,0
