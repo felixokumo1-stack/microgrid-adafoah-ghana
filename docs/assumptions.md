@@ -308,3 +308,36 @@ Cost reduction vs diesel: 18–48%
 180 kWp + 1 wind + 300 kWh + 60 kW gen / LF
 LCOE EUR 0.228/kWh | CAPEX EUR 459,000 | Ren. frac. 99.0% | Fuel 1,194 L/yr
 Recommended for donor reporting as near-zero-diesel scenario.
+
+## 9. Python Dispatch Model — Verification Results and Limitations
+
+### 9.1 Verification summary (Phase 4)
+| Metric | Python | HOMER | Δ | Status |
+|--------|--------|-------|---|--------|
+| LPSP | 0.00% | 0.00% | 0.00 pp | ✓ Verified |
+| Renewable fraction | 96.0% | 97.6% | 1.6 pp | ✓ Within tolerance |
+| Annual fuel | 4,711 L/yr | 2,968 L/yr | +58% | Explainable (see 9.2) |
+| Generator hours | 459 h/yr | 307 h/yr | +49% | Explainable (see 9.2) |
+
+### 9.2 Fuel discrepancy explanation
+The Python model uses a rule-based hourly dispatch controller.
+HOMER Pro uses a Load Following optimisation engine with a kinetic
+battery model (KiBaM — Manwell & McGowan, 1993).
+
+Root cause: 212 hours/yr where actual deficit < minimum load ratio
+threshold (18 kW = 30% × 60 kW rated). In these hours:
+- This model: starts diesel at 18 kW minimum, charges battery surplus
+- HOMER: defers start, draws battery marginally below nominal SOC_min,
+  recovers within 1–2 hours as PV ramps up (06–09h) or wind varies
+
+Affected windows: pre-sunrise (06–09h) and post-sunset (18–22h).
+Mean diesel output when running: 22.0 kW (37% of rated).
+Mean SOC at diesel start: 22.2% — battery genuinely depleted.
+
+### 9.3 Conclusion
+The Python model correctly captures system behaviour for the purposes
+of reliability verification (LPSP = 0%) and dispatch pattern analysis.
+The fuel discrepancy is a known limitation of rule-based vs optimising
+dispatch and does not affect the primary engineering conclusion.
+For precise fuel cost projections, HOMER results are used in Phase 5.
+Reference: Dufo-López & Bernal-Agustín (2015), Energy Conversion & Management
