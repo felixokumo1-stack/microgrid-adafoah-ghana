@@ -1,0 +1,4 @@
+Config,Description,PV_kWp,Wind_kW,Battery_kWh,Generator_kW,CAPEX_EUR,Ann_Capital_EUR,Ann_OM_EUR,Ann_Fuel_EUR,Ann_Replacement_EUR,Ann_Total_EUR,LCOE_Python_EUR_kWh,LCOE_HOMER_EUR_kWh,Ren_Fraction_pct,Annual_Fuel_L,HOMER_NPC_EUR
+A,Config A — PV + Battery + Diesel,200,0,400,60,446500,45477.0,4732.0,19818.0,4898.0,73235.0,0.2933,0.287,86.5,11461,703858
+B,Config B — PV + Wind + Battery + Diesel (OPTIMAL),150,50,300,60,423000,43083.0,6625.0,5132.0,3757.0,57329.0,0.2296,0.227,97.6,2968,555700
+C,Config C — PV + Wind×2 + Battery + Diesel,120,100,200,60,427000,43491.0,8861.0,4461.0,2725.0,58607.0,0.2347,0.233,97.89999999999999,2580,570385
