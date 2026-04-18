@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project 01 — Page 1 | Felix Okumo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #0F1923;
+  --ink-mid: #3D5166;
+  --accent:  #1B4FD8;
+  --paper:   #F9F7F2;
+  --rule:    #D4CFC6;
+  --serif:   'DM Serif Display', serif;
+  --sans:    'DM Sans', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#ddd9d0;}
+body{font-family:var(--sans);color:var(--ink);background:transparent;}
+
+.page{
+  width:210mm;min-height:296mm;
+  margin:10mm auto;padding:18mm 20mm 16mm;
+  background:var(--paper);
+  background-image:radial-gradient(#C8C3B9 1px,transparent 1px);
+  background-size:5.5mm 5.5mm;
+  box-shadow:0 6px 40px rgba(0,0,0,0.20);
+  position:relative;
+}
+.over{position:relative;z-index:1;}
+
+/* HEADER */
+.proj-label{font-family:var(--mono);font-size:7pt;color:var(--accent);letter-spacing:.10em;text-transform:uppercase;margin-bottom:2mm;}
+.hrow{display:flex;justify-content:space-between;align-items:flex-end;gap:6mm;}
+.proj-title{font-family:var(--serif);font-size:24pt;line-height:1.05;color:var(--ink);}
+.meta{font-family:var(--mono);font-size:6.5pt;color:var(--ink-mid);text-align:right;line-height:1.7;}
+.hrule{height:1px;background:var(--ink);margin:3mm 0 4.5mm;}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:1.65fr 1fr;gap:6mm;}
+
+/* SECTION HEADING */
+.sh{font-family:var(--mono);font-size:7pt;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2mm;}
+
+/* BODY TEXT */
+p.body{font-size:8.5pt;line-height:1.62;text-align:justify;margin-bottom:3mm;color:var(--ink);}
+p.body strong{font-weight:500;}
+
+/* FIGURE BOX */
+.fig{border:1px solid var(--rule);background:#fff;margin:3mm 0;padding:4px;}
+.fig-inner{width:100%;overflow:hidden;}
+.fig svg{width:100%;height:auto;display:block;}
+.figcap{font-family:var(--mono);font-size:6pt;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.03em;border-top:1px solid var(--rule);padding-top:1.5mm;margin-top:2mm;}
+
+/* RIGHT COLUMN */
+.rcol{display:flex;flex-direction:column;gap:3.5mm;}
+
+/* KPI */
+.kpi{border:1px solid var(--rule);border-left:3px solid var(--accent);background:#fff;padding:3.5mm 4mm;}
+.kv{font-family:var(--serif);font-size:19pt;color:var(--accent);line-height:1.05;}
+.kl{font-family:var(--mono);font-size:6pt;text-transform:uppercase;color:var(--ink-mid);margin-top:.5mm;letter-spacing:.03em;}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:2mm;}
+
+/* DATA TABLE */
+.dtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:6.5pt;}
+.dtable th{background:var(--ink);color:#fff;padding:1.5mm 2mm;text-align:left;font-weight:500;}
+.dtable td{padding:1.3mm 2mm;border-bottom:1px solid var(--rule);color:var(--ink);}
+.dtable tr:nth-child(even) td{background:rgba(212,207,198,.22);}
+
+/* RESOURCE BOX */
+.resbox{border:1px solid var(--rule);background:#fff;padding:3.5mm;}
+.res-row{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-top:1.5mm;}
+.res-item{padding:2mm 2.5mm;background:var(--paper);border-left:2px solid var(--accent);}
+.ri-val{font-family:var(--serif);font-size:12pt;color:var(--accent);line-height:1.1;}
+.ri-lbl{font-family:var(--mono);font-size:6pt;text-transform:uppercase;color:var(--ink-mid);margin-top:.5mm;}
+
+/* CONSTRAINT CHECKLIST */
+.checklist{font-family:var(--mono);font-size:6.5pt;color:var(--ink);}
+.checklist li{list-style:none;padding:1mm 0;border-bottom:1px solid var(--rule);display:flex;gap:2mm;align-items:center;}
+.checklist li:last-child{border-bottom:none;}
+.check{color:var(--accent);font-size:8pt;flex-shrink:0;}
+
+/* TECH TAGS */
+.tags{display:flex;flex-wrap:wrap;gap:1.5mm;margin-top:1mm;}
+.tag{background:var(--ink);color:#fff;font-family:var(--mono);font-size:6pt;padding:2px 5px;display:inline-block;}
+
+/* IMPACT BAR */
+.impact{background:#fff;border-left:4px solid var(--accent);padding:3mm 4mm;margin-top:4.5mm;}
+.impact p{font-size:8pt;line-height:1.55;color:var(--ink);}
+.impact strong{font-family:var(--serif);font-size:9.5pt;color:var(--accent);}
+
+/* FOOTER */
+.foot{display:flex;justify-content:space-between;margin-top:4mm;padding-top:2mm;border-top:1px solid var(--rule);font-family:var(--mono);font-size:6.5pt;color:var(--ink-mid);opacity:.55;}
+
+@media print{
+  html{background:#fff;}
+  .page{margin:0;box-shadow:none;width:210mm;min-height:296mm;}
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="over">
+
+  <!-- HEADER -->
+  <div class="proj-label">Project 02 // Renewable Energy Systems</div>
+  <div class="hrow">
+    <h1 class="proj-title">Off-Grid Hybrid<br>Microgrid Design</h1>
+    <div class="meta">
+      Siamekome Island, Ada East District<br>
+      Greater Accra Region · Ghana<br>
+      5.7833°N &nbsp;0.6333°E &nbsp;2 m asl<br>
+      April 2026
+    </div>
+  </div>
+  <div class="hrule"></div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div>
+      <div class="sh">01 // Problem &amp; Site</div>
+      <p class="body">
+        Siamekome Island — a representative community in the Volta River estuary, Ada East District —
+        has no grid connection and no feasible path to grid extension. Approximately
+        <strong>500 households</strong> plus five anchor loads (health clinic, two schools, productive
+        use enterprises, water pump) depend on intermittent diesel generation. A donor capital ceiling
+        of <strong>EUR 500,000</strong> and a reliability target of <strong>LPSP ≤ 5%</strong> define
+        the design envelope. The decision question: what is the minimum-LCOE PV-wind-battery-diesel
+        hybrid providing 24/7 electricity within these constraints?
+      </p>
+
+      <div class="sh">02 // Load Profile</div>
+      <p class="body">
+        Bottom-up demand estimation using the IEA Multi-Tier Framework produced
+        <strong>249,660 kWh/year</strong> and a <strong>51.5 kW peak demand</strong>.
+        The profile exhibits a characteristic dual-peak: an anchor-load coincidence peak at 08:00
+        (clinic + schools + shops operating simultaneously) and a household evening peak at 18:00–21:00
+        as solar generation ceases. The evening peak is the critical battery sizing driver; the morning
+        peak, occurring at partial solar irradiance, creates a transient battery discharge requirement
+        even during daylight hours.
+      </p>
+
+      <!-- System architecture SVG -->
+      <div class="sh">03 // System Architecture</div>
+      <div class="fig">
+        <div class="fig-inner">
+          <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" font-family="'JetBrains Mono',monospace">
+            <defs>
+              <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M2 2L8 5L2 8" fill="none" stroke="#1B4FD8" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+              <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                <path d="M2 2L8 5L2 8" fill="none" stroke="#3D5166" stroke-width="1.5" stroke-linecap="round"/>
+              </marker>
+            </defs>
+
+            <!-- AC Bus bar -->
+            <rect x="155" y="74" width="110" height="22" rx="2" fill="#1B4FD8" opacity=".12"/>
+            <rect x="155" y="74" width="110" height="22" rx="2" fill="none" stroke="#1B4FD8" stroke-width="1"/>
+            <text x="210" y="89" text-anchor="middle" fill="#1B4FD8" font-size="7" font-weight="500">AC BUS</text>
+
+            <!-- PV -->
+            <rect x="14" y="20" width="72" height="34" rx="3" fill="#EEF2FF" stroke="#1B4FD8" stroke-width="0.8"/>
+            <text x="50" y="34" text-anchor="middle" fill="#0F1923" font-size="7.5" font-weight="500">Solar PV</text>
+            <text x="50" y="46" text-anchor="middle" fill="#3D5166" font-size="6.5">150 kWp</text>
+            <line x1="86" y1="37" x2="155" y2="85" stroke="#1B4FD8" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- Wind -->
+            <rect x="14" y="68" width="72" height="34" rx="3" fill="#ECFDF5" stroke="#16A34A" stroke-width="0.8"/>
+            <text x="50" y="82" text-anchor="middle" fill="#0F1923" font-size="7.5" font-weight="500">Wind</text>
+            <text x="50" y="94" text-anchor="middle" fill="#3D5166" font-size="6.5">50 kW IEC-III</text>
+            <line x1="86" y1="85" x2="155" y2="85" stroke="#16A34A" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- Diesel -->
+            <rect x="14" y="116" width="72" height="34" rx="3" fill="#FEF2F2" stroke="#DC2626" stroke-width="0.8"/>
+            <text x="50" y="130" text-anchor="middle" fill="#0F1923" font-size="7.5" font-weight="500">Diesel Gen</text>
+            <text x="50" y="142" text-anchor="middle" fill="#3D5166" font-size="6.5">60 kW backup</text>
+            <line x1="86" y1="133" x2="155" y2="93" stroke="#DC2626" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- Converter -->
+            <rect x="155" y="112" width="72" height="34" rx="3" fill="#FAF5FF" stroke="#7C3AED" stroke-width="0.8"/>
+            <text x="191" y="126" text-anchor="middle" fill="#0F1923" font-size="7.5" font-weight="500">Converter</text>
+            <text x="191" y="138" text-anchor="middle" fill="#3D5166" font-size="6.5">60 kW bidir.</text>
+            <line x1="191" y1="112" x2="210" y2="96" stroke="#7C3AED" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- Battery -->
+            <rect x="155" y="152" width="72" height="14" rx="3" fill="#EDE9FE" stroke="#7C3AED" stroke-width="0.8"/>
+            <text x="191" y="162" text-anchor="middle" fill="#0F1923" font-size="6.5">300 kWh LFP</text>
+            <line x1="191" y1="152" x2="191" y2="146" stroke="#7C3AED" stroke-width="1"/>
+
+            <!-- Load -->
+            <rect x="334" y="68" width="72" height="34" rx="3" fill="#F0FDF4" stroke="#16A34A" stroke-width="0.8"/>
+            <text x="370" y="82" text-anchor="middle" fill="#0F1923" font-size="7.5" font-weight="500">AC Load</text>
+            <text x="370" y="94" text-anchor="middle" fill="#3D5166" font-size="6.5">500 HH + anchors</text>
+            <line x1="265" y1="85" x2="334" y2="85" stroke="#1B4FD8" stroke-width="1" marker-end="url(#arr)"/>
+
+            <!-- Dispatch controller dashed box -->
+            <rect x="148" y="67" width="86" height="90" rx="2" fill="none" stroke="#1B4FD8" stroke-width="0.6" stroke-dasharray="3 2"/>
+            <text x="191" y="62" text-anchor="middle" fill="#1B4FD8" font-size="5.5" letter-spacing=".04em" text-transform="uppercase">DISPATCH CONTROLLER</text>
+
+            <!-- Priority label -->
+            <text x="210" y="154" text-anchor="middle" fill="#3D5166" font-size="5.5">Priority: PV → Wind → Battery → Diesel</text>
+          </svg>
+        </div>
+        <div class="figcap">Fig 1.1 — System architecture: AC-coupled hybrid microgrid, load-following dispatch</div>
+      </div>
+
+      <div class="sh" style="margin-top:3mm;">04 // Resource Assessment</div>
+      <p class="body">
+        PVGIS ERA5 TMY (2005–2020) confirmed a strong solar resource. Wind assessment required
+        resolving a <strong>32% discrepancy</strong> between ERA5 and MERRA-2 reanalysis products
+        at 10 m height. ERA5 was selected as the primary basis after validation against West African
+        coastal literature. A critical turbine-site mismatch was identified: the Vestas V80 reference
+        turbine (rated speed 16 m/s, IEC Class I) produced only <strong>4.2% CF</strong> versus
+        <strong>19.7% CF</strong> for an IEC Class III machine (rated speed 11 m/s) correctly matched
+        to the 6.15 m/s hub-height regime. Solar–wind Pearson correlation of <strong>−0.24</strong>
+        confirmed partial complementarity driven by the ITCZ/SW monsoon seasonal cycle.
+      </p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="rcol">
+
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kv">5.16</div>
+          <div class="kl">Peak sun hrs/day<br>PVGIS ERA5 TMY</div>
+        </div>
+        <div class="kpi">
+          <div class="kv">6.15</div>
+          <div class="kl">Wind m/s at 50m<br>ERA5 primary</div>
+        </div>
+      </div>
+
+      <!-- Resource summary box -->
+      <div class="resbox">
+        <div class="sh">Site Resource Summary</div>
+        <div class="res-row">
+          <div class="res-item">
+            <div class="ri-val">1,884</div>
+            <div class="ri-lbl">GHI kWh/m²/yr</div>
+          </div>
+          <div class="res-item">
+            <div class="ri-val">19.7%</div>
+            <div class="ri-lbl">Wind CF IEC-III</div>
+          </div>
+          <div class="res-item">
+            <div class="ri-val">−10.5%</div>
+            <div class="ri-lbl">PV thermal derate</div>
+          </div>
+          <div class="res-item">
+            <div class="ri-val">−0.24</div>
+            <div class="ri-lbl">Solar-wind corr.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Load profile summary -->
+      <div>
+        <div class="sh">Load Profile</div>
+        <table class="dtable">
+          <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Annual energy</td><td>249,660 kWh/yr</td></tr>
+            <tr><td>Peak demand</td><td>51.5 kW @ 08:00</td></tr>
+            <tr><td>Average demand</td><td>28.5 kW</td></tr>
+            <tr><td>Load factor</td><td>0.553</td></tr>
+            <tr><td>Households</td><td>500 (Tier 2/3 MTF)</td></tr>
+            <tr><td>Anchor loads</td><td>Clinic, 2 schools,<br>shops, pump</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Constraints checklist -->
+      <div>
+        <div class="sh">Constraints</div>
+        <ul class="checklist">
+          <li><span class="check">✓</span><span>CAPEX ≤ EUR 500k — met: EUR 423k</span></li>
+          <li><span class="check">✓</span><span>LPSP ≤ 5% — achieved: 0.00%</span></li>
+          <li><span class="check">✓</span><span>Diesel backup required — 60 kW gen</span></li>
+          <li><span class="check">✓</span><span>Limited O&M — 50m hub, LFP battery</span></li>
+          <li><span class="check">✓</span><span>IEC 62257 / IEA ESMAP guidelines</span></li>
+        </ul>
+      </div>
+
+      <!-- Tech stack -->
+      <div>
+        <div class="sh">Technical Stack</div>
+        <div class="tags">
+          <span class="tag">HOMER Pro</span>
+          <span class="tag">Python 3</span>
+          <span class="tag">windpowerlib</span>
+          <span class="tag">PVGIS ERA5</span>
+          <span class="tag">R.ninja</span>
+          <span class="tag">pandas</span>
+          <span class="tag">numpy</span>
+          <span class="tag">IEC 62257</span>
+          <span class="tag">IEC 61400-1</span>
+          <span class="tag">GitHub</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- IMPACT BAR -->
+  <div class="impact">
+    <p><strong>Engineering insight:</strong> A 32% wind data discrepancy between ERA5 and MERRA-2,
+    and a turbine-site class mismatch producing 4.2% vs 19.7% capacity factor, were identified and
+    corrected before any optimisation — validating resource characterisation as the critical
+    foundation of microgrid feasibility studies.</p>
+  </div>
+
+  <div class="foot">
+    <span>02 // Off-Grid Hybrid Microgrid — Page 1 of 2</span>
+    <span>Felix Okumo Portfolio</span>
+  </div>
+</div>
+</div>
+</body>
+</html>

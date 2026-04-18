@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project 01 — Page 2 | Felix Okumo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --ink:#0F1923;--ink-mid:#3D5166;--accent:#1B4FD8;
+  --paper:#F9F7F2;--rule:#D4CFC6;
+  --serif:'DM Serif Display',serif;--sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{background:#ddd9d0;}
+body{font-family:var(--sans);color:var(--ink);}
+
+.page{
+  width:210mm;min-height:296mm;margin:10mm auto;
+  padding:18mm 20mm 16mm;
+  background:var(--paper);
+  background-image:radial-gradient(#C8C3B9 1px,transparent 1px);
+  background-size:5.5mm 5.5mm;
+  box-shadow:0 6px 40px rgba(0,0,0,0.20);
+  position:relative;
+}
+.over{position:relative;z-index:1;}
+
+/* HEADER */
+.proj-label{font-family:var(--mono);font-size:7pt;color:var(--accent);letter-spacing:.10em;text-transform:uppercase;margin-bottom:2mm;}
+.hrow{display:flex;justify-content:space-between;align-items:flex-end;}
+.proj-title{font-family:var(--serif);font-size:18pt;line-height:1.1;color:var(--ink);}
+.meta{font-family:var(--mono);font-size:6.5pt;color:var(--ink-mid);text-align:right;}
+.hrule{height:1px;background:var(--ink);margin:3mm 0 4.5mm;}
+
+.grid{display:grid;grid-template-columns:1.65fr 1fr;gap:6mm;}
+
+.sh{font-family:var(--mono);font-size:7pt;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2mm;}
+p.body{font-size:8.5pt;line-height:1.62;text-align:justify;margin-bottom:3mm;}
+p.body strong{font-weight:500;}
+
+.fig{border:1px solid var(--rule);background:#fff;margin:3mm 0;padding:4px;overflow:hidden;}
+.figcap{font-family:var(--mono);font-size:6pt;color:var(--ink-mid);text-transform:uppercase;letter-spacing:.03em;border-top:1px solid var(--rule);padding-top:1.5mm;margin-top:2mm;}
+
+.rcol{display:flex;flex-direction:column;gap:3.5mm;}
+
+.kpi{border:1px solid var(--rule);border-left:3px solid var(--accent);background:#fff;padding:3.5mm 4mm;}
+.kv{font-family:var(--serif);font-size:19pt;color:var(--accent);line-height:1.05;}
+.kl{font-family:var(--mono);font-size:6pt;text-transform:uppercase;color:var(--ink-mid);margin-top:.5mm;letter-spacing:.03em;}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:2mm;}
+
+.kpi.green{border-left-color:#16A34A;}.kpi.green .kv{color:#16A34A;}
+.kpi.red{border-left-color:#DC2626;}.kpi.red .kv{color:#DC2626;}
+
+.dtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:6.5pt;}
+.dtable th{background:var(--ink);color:#fff;padding:1.5mm 2mm;text-align:left;font-weight:500;}
+.dtable td{padding:1.3mm 2mm;border-bottom:1px solid var(--rule);color:var(--ink);}
+.dtable tr:nth-child(even) td{background:rgba(212,207,198,.22);}
+.dtable tr.best td{background:rgba(27,79,216,.09);font-weight:500;color:var(--accent);}
+.dtable tr.best td:first-child::before{content:"★ ";}
+
+/* SENS BARS */
+.sb-row{display:grid;grid-template-columns:52px 1fr 36px;align-items:center;gap:1.5mm;margin:1.2mm 0;font-family:var(--mono);font-size:6pt;color:var(--ink-mid);}
+.sb-track{height:5px;background:var(--rule);position:relative;}
+.sb-fill{position:absolute;left:0;top:0;height:100%;background:var(--accent);opacity:.75;}
+.sb-fill.r{background:#DC2626;}
+
+/* LESSONS */
+.lesson{display:flex;gap:2.5mm;padding:2mm 0;border-bottom:1px solid var(--rule);align-items:flex-start;}
+.lesson:last-child{border-bottom:none;}
+.l-num{font-family:var(--mono);font-size:7pt;color:var(--accent);font-weight:500;flex-shrink:0;padding-top:.5mm;}
+.l-text{font-size:7.5pt;line-height:1.5;color:var(--ink);}
+.l-text strong{font-weight:500;}
+
+/* IMPACT BAR */
+.impact{background:#fff;border-left:4px solid var(--accent);padding:3mm 4mm;margin-top:4.5mm;}
+.impact p{font-size:8pt;line-height:1.55;}
+.impact strong{font-family:var(--serif);font-size:9.5pt;color:var(--accent);}
+
+.foot{display:flex;justify-content:space-between;margin-top:4mm;padding-top:2mm;border-top:1px solid var(--rule);font-family:var(--mono);font-size:6.5pt;color:var(--ink-mid);opacity:.55;}
+
+@media print{
+  html{background:#fff;}
+  .page{margin:0;box-shadow:none;width:210mm;min-height:296mm;}
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="over">
+
+  <div class="proj-label">Project 02 // Renewable Energy Systems — continued</div>
+  <div class="hrow">
+    <h1 class="proj-title">Results, Financial Analysis<br>&amp; Lessons Learned</h1>
+    <div class="meta">HOMER Pro · Python · IEC 62257<br>Ada East, Ghana · April 2026</div>
+  </div>
+  <div class="hrule"></div>
+
+  <div class="grid">
+    <!-- LEFT -->
+    <div>
+      <div class="sh">05 // Optimisation Results — Three Configurations</div>
+      <p class="body">
+        HOMER Pro evaluated 500–1,730 simulations per configuration. All three met the
+        LPSP ≤ 5% constraint with zero unmet load. <strong>Config B (PV + Wind + Battery + Diesel)
+        emerged as the economic optimum</strong> at EUR 0.227/kWh — 21% below the solar-only
+        baseline and 63% below diesel-only generation. Adding one 50 kW IEC Class III wind turbine
+        allowed simultaneous PV downsizing by 50 kWp and battery downsizing by 100 kWh, reducing
+        CAPEX by EUR 23,500 despite the turbine addition. Config C confirmed diminishing returns:
+        a second turbine increases NPC by EUR 14,685 because the system is already 97.6% renewable
+        with only 2,968 L/yr of diesel remaining to displace.
+      </p>
+
+      <!-- LCOE stacked bar -->
+      <div class="fig">
+        <div style="position:relative;height:95px;width:100%;">
+          <canvas id="lcoeChart"></canvas>
+        </div>
+        <div class="figcap">Fig 2.1 — LCOE decomposition by cost component · EUR/kWh · 8% discount rate · 20yr</div>
+      </div>
+
+      <div class="sh">06 // Financial Analysis</div>
+      <p class="body">
+        Against a diesel-only baseline (EUR 0.48/kWh), Config B delivers
+        <strong>EUR 89,849/year</strong> in cost savings with a <strong>4.7-year simple payback</strong>
+        and <strong>EUR 882,154 NPV</strong> over 20 years. Sensitivity analysis identified discount
+        rate as the dominant uncertainty: LCOE ranges from EUR 0.206/kWh at 6% (concessional) to
+        EUR 0.323/kWh at 15% (commercial). The project break-even financing rate is
+        <strong>16.8%</strong> — providing robust headroom above all realistic donor and commercial
+        scenarios. Fuel price sensitivity is minimal (±EUR 0.008/kWh across EUR 0.90–2.00/L range)
+        because Config B consumes only 2,968 L/yr at 97.6% renewable fraction.
+      </p>
+
+      <!-- Cashflow chart -->
+      <div class="fig">
+        <div style="position:relative;height:95px;width:100%;">
+          <canvas id="cashChart"></canvas>
+        </div>
+        <div class="figcap">Fig 2.2 — 20-year cumulative cost: Config B vs diesel-only baseline · EUR</div>
+      </div>
+
+      <div class="sh" style="margin-top:3mm;">07 // Lessons Learned</div>
+      <div>
+        <div class="lesson">
+          <span class="l-num">L1</span>
+          <span class="l-text"><strong>Turbine-site class matching is critical.</strong> Vestas V80 (IEC I, rated 16 m/s) produced 4.2% CF at 6.15 m/s vs 19.7% for IEC Class III (rated 11 m/s). Wrong class invalidates wind analysis entirely.</span>
+        </div>
+        <div class="lesson">
+          <span class="l-num">L2</span>
+          <span class="l-text"><strong>Cross-validate reanalysis datasets.</strong> ERA5 and MERRA-2 disagreed 32% on wind speed at 10 m. Single-source wind data is insufficient for feasibility studies in West Africa.</span>
+        </div>
+        <div class="lesson">
+          <span class="l-num">L3</span>
+          <span class="l-text"><strong>MTF thresholds ≠ typical consumption.</strong> IEA Tier 2/3 minimums (200/1000 Wh/day) underestimated load 4×. GOGLA 2022 typical values (500/1500 Wh/day) are the correct design basis.</span>
+        </div>
+        <div class="lesson">
+          <span class="l-num">L4</span>
+          <span class="l-text"><strong>Search space boundary artefacts.</strong> Initial PV ceiling of 200 kWp was a boundary optimum. Always extend search space beyond first result to confirm true interior optimum.</span>
+        </div>
+        <div class="lesson">
+          <span class="l-num">L5</span>
+          <span class="l-text"><strong>Rule-based vs optimising dispatch.</strong> Python model overstated diesel runtime 49% vs HOMER due to minimum-load-ratio mechanics. LPSP matched exactly. Document discrepancies — do not hide them.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="rcol">
+
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kv">0.227</div>
+          <div class="kl">LCOE EUR/kWh<br>Config B optimal</div>
+        </div>
+        <div class="kpi green">
+          <div class="kv">97.6%</div>
+          <div class="kl">Renewable<br>fraction</div>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi green">
+          <div class="kv">4.7</div>
+          <div class="kl">Payback yrs<br>vs diesel</div>
+        </div>
+        <div class="kpi red">
+          <div class="kv">−63%</div>
+          <div class="kl">LCOE reduction<br>vs diesel-only</div>
+        </div>
+      </div>
+
+      <!-- Config comparison table -->
+      <div>
+        <div class="sh">Configuration Comparison</div>
+        <table class="dtable">
+          <thead>
+            <tr><th>Config</th><th>LCOE</th><th>CAPEX</th><th>Ren%</th><th>Fuel L</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>A — PV+Batt</td><td>€0.287</td><td>€447k</td><td>86.5</td><td>11,461</td></tr>
+            <tr class="best"><td>B — +Wind</td><td>€0.227</td><td>€423k</td><td>97.6</td><td>2,968</td></tr>
+            <tr><td>C — +Wind×2</td><td>€0.233</td><td>€427k</td><td>97.9</td><td>2,580</td></tr>
+            <tr><td>Diesel only</td><td>€0.48+</td><td>€42k</td><td>0</td><td>89,164</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Config B breakdown -->
+      <div>
+        <div class="sh">Config B — Optimal System</div>
+        <table class="dtable">
+          <tbody>
+            <tr><td>PV array</td><td>150 kWp fixed</td></tr>
+            <tr><td>Wind turbine</td><td>1 × 50 kW IEC-III</td></tr>
+            <tr><td>Battery</td><td>300 kWh LFP</td></tr>
+            <tr><td>Generator</td><td>60 kW diesel</td></tr>
+            <tr><td>Converter</td><td>60 kW bidir.</td></tr>
+            <tr><td>Gen hours/yr</td><td>307 h (backup only)</td></tr>
+            <tr><td>Battery autonomy</td><td>11.2 hours</td></tr>
+            <tr><td>LPSP</td><td>0.00%</td></tr>
+            <tr><td>NPV savings</td><td>EUR 882,154</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Sensitivity -->
+      <div>
+        <div class="sh">Sensitivity — Config B</div>
+        <div class="sb-row"><span>Disc. rate</span><div class="sb-track"><div class="sb-fill" style="width:100%"></div></div><span>€0.117</span></div>
+        <div class="sb-row"><span>PV cost</span><div class="sb-track"><div class="sb-fill" style="width:66%"></div></div><span>€0.037</span></div>
+        <div class="sb-row"><span>Battery</span><div class="sb-track"><div class="sb-fill" style="width:45%"></div></div><span>€0.025</span></div>
+        <div class="sb-row"><span>Fuel vol.</span><div class="sb-track"><div class="sb-fill" style="width:43%"></div></div><span>€0.024</span></div>
+        <div class="sb-row"><span>Fuel price</span><div class="sb-track"><div class="sb-fill r" style="width:14%"></div></div><span>€0.008</span></div>
+        <div style="font-family:var(--mono);font-size:6pt;color:var(--ink-mid);margin-top:1.5mm;">Break-even discount rate: 16.8%</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="impact">
+    <p><strong>Strategic significance:</strong> One 50 kW coastal wind turbine reduced system LCOE
+    by 21%, cut fuel consumption 74%, and generated EUR 882k in 20-year NPV savings — demonstrating
+    that resource complementarity (Pearson r = −0.24) translates directly into economic optimality
+    for remote island electrification in West Africa.</p>
+  </div>
+
+  <div class="foot">
+    <span>02 // Off-Grid Hybrid Microgrid — Page 2 of 2</span>
+    <span>Felix Okumo Portfolio</span>
+  </div>
+</div>
+</div>
+
+<script>
+const ACCENT='#1B4FD8',GREEN='#16A34A',RED='#DC2626',AMBER='#BA7517',INKM='#3D5166',RULE='#D4CFC6';
+
+// Fig 2.1 — LCOE stacked bar
+(function(){
+  const ctx=document.getElementById('lcoeChart').getContext('2d');
+  new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['Config A','Config B ★','Config C'],
+      datasets:[
+        {label:'Capital',   data:[0.1821,0.1726,0.1742],backgroundColor:ACCENT,  stack:'s'},
+        {label:'O&M',      data:[0.0190,0.0265,0.0355],backgroundColor:GREEN,   stack:'s'},
+        {label:'Fuel',     data:[0.0794,0.0206,0.0179],backgroundColor:RED,     stack:'s'},
+        {label:'Replace',  data:[0.0196,0.0151,0.0109],backgroundColor:AMBER,   stack:'s'},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{font:{family:"'JetBrains Mono'",size:7},color:INKM,boxWidth:9,padding:5}},
+        tooltip:{
+          callbacks:{
+            label:c=>'  '+c.dataset.label+': €'+c.parsed.y.toFixed(3)+'/kWh'
+          },
+          titleFont:{family:"'JetBrains Mono'",size:7},
+          bodyFont:{family:"'JetBrains Mono'",size:7},
+        }
+      },
+      scales:{
+        x:{stacked:true,grid:{display:false},ticks:{font:{family:"'JetBrains Mono'",size:7},color:INKM}},
+        y:{stacked:true,min:0,max:0.35,grid:{color:RULE,lineWidth:0.5},
+          ticks:{font:{family:"'JetBrains Mono'",size:6.5},color:INKM,callback:v=>'€'+v.toFixed(2),stepSize:0.05}}
+      }
+    }
+  });
+})();
+
+// Fig 2.2 — Cumulative cash flow
+(function(){
+  const ctx=document.getElementById('cashChart').getContext('2d');
+  const yrs=Array.from({length:21},(_,i)=>i);
+  const capB=423000,annOmB=6625,fuelB0=4273,infl=0.025;
+  const capD=42000,fuelD0=128306; // diesel only annual fuel
+  let cumB=[capB],cumD=[capD];
+  for(let y=1;y<=20;y++){
+    const fB=fuelB0*Math.pow(1+infl,y-1);
+    const fD=fuelD0*Math.pow(1+infl,y-1);
+    cumB.push(cumB[y-1]+annOmB+fB);
+    cumD.push(cumD[y-1]+fD+(y===1?0:0));
+  }
+  // find crossover
+  let cross=null;
+  for(let y=1;y<=20;y++){if(cumB[y]<=cumD[y]&&cross===null)cross=y;}
+
+  new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:yrs,
+      datasets:[
+        {label:'Config B hybrid',data:cumB.map(v=>v/1000),borderColor:ACCENT,backgroundColor:ACCENT+'18',fill:true,borderWidth:2,pointRadius:0,tension:0.1},
+        {label:'Diesel-only',   data:cumD.map(v=>v/1000),borderColor:RED,  backgroundColor:RED+'10',  fill:true,borderWidth:2,pointRadius:0,tension:0.1,borderDash:[4,3]},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom',labels:{font:{family:"'JetBrains Mono'",size:7},color:INKM,boxWidth:14,padding:6}},
+        tooltip:{
+          callbacks:{label:c=>'  '+c.dataset.label+': €'+(c.parsed.y).toFixed(0)+'k'},
+          titleFont:{family:"'JetBrains Mono'",size:7},
+          bodyFont:{family:"'JetBrains Mono'",size:7},
+        }
+      },
+      scales:{
+        x:{grid:{color:RULE,lineWidth:0.5},ticks:{font:{family:"'JetBrains Mono'",size:6.5},color:INKM,callback:v=>'Yr '+v}},
+        y:{grid:{color:RULE,lineWidth:0.5},ticks:{font:{family:"'JetBrains Mono'",size:6.5},color:INKM,callback:v=>'€'+v+'k'}}
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
