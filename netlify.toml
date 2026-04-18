@@ -1,9 +1,10 @@
 [build]
   publish = "docs"
+  # This tells Netlify NOT to run any install scripts
   command = ""
 
 [build.environment]
-  PYTHON_VERSION = "3.8" 
-
-[context.production]
-  ignore = "exit 0"
+  # This stops Netlify from looking for a Python environment
+  NETLIFY_SKIP_PYTHON_INSTALL = "1"
+  # This stops Netlify from looking for a Node.js environment
+  NETLIFY_SKIP_NODE_INSTALL = "1"
