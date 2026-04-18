@@ -1,0 +1,6 @@
+[build]
+  # The directory that contains the deploy-ready HTML files and assets.
+  publish = "docs"
+
+  # Since your site is static HTML, no build command is needed.
+  command = ""
