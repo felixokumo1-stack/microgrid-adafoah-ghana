@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Off-Grid Hybrid Microgrid · Ada East, Ghana — Felix Okumo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:      #F4F2EE;
+  --surf:    #FFFFFF;
+  --surf2:   #F8F6F2;
+  --bord:    #E2DDD6;
+  --bord2:   #CEC8BF;
+  --ink:     #1A1F2E;
+  --ink2:    #44526A;
+  --ink3:    #7A8CA4;
+  --acc:     #1B4FD8;
+  --acc2:    #2563EB;
+  --acc-bg:  #EEF2FF;
+  --grn:     #16A34A;
+  --grn2:    #15803D;
+  --red:     #DC2626;
+  --amb:     #D97706;
+  --hero:    #1A2540;
+  --hero-t2: #9AABBD;
+  --serif:   'DM Serif Display',serif;
+  --sans:    'DM Sans',sans-serif;
+  --mono:    'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;background:var(--bg);}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:15px;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--bord2);}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(26,37,64,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:54px;}
+.nav-brand{font-family:var(--mono);font-size:11px;color:#7BAFD4;letter-spacing:.08em;text-transform:uppercase;}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.45);text-decoration:none;letter-spacing:.05em;text-transform:uppercase;transition:color .18s;}
+.nav-links a:hover{color:#fff;}
+.nav-gh{font-family:var(--mono);font-size:10px;background:var(--acc);color:#fff;padding:6px 14px;text-decoration:none;letter-spacing:.04em;transition:background .18s;}
+.nav-gh:hover{background:var(--acc2);}
+
+section{padding:72px 0;}
+.container{max-width:1080px;margin:0 auto;padding:0 40px;}
+section:nth-child(even){background:var(--surf2);}
+.divider{height:1px;background:var(--bord);}
+
+/* HERO — stays dark for contrast */
+#hero{padding:108px 0 72px;background:var(--hero);position:relative;overflow:hidden;}
+#hero::before{content:'';position:absolute;top:-150px;right:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(37,99,235,.10) 0%,transparent 68%);pointer-events:none;}
+#hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc) 0%,#4F9CF9 50%,var(--grn) 100%);}
+.hero-label{font-family:var(--mono);font-size:10px;color:#7BAFD4;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;}
+.hero-title{font-family:var(--serif);font-size:clamp(28px,4.2vw,52px);line-height:1.08;color:#fff;margin-bottom:16px;}
+.hero-title span{color:#60A5FA;}
+.hero-sub{font-size:15px;color:var(--hero-t2);max-width:560px;line-height:1.72;margin-bottom:28px;}
+.hero-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;}
+.hero-chip{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.10);padding:4px 10px;}
+.tool-chip{font-family:var(--mono);font-size:9.5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.45);padding:4px 9px;}
+.hero-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:40px;}
+.hkpi{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-top:2px solid var(--acc);padding:16px 14px;}
+.hkpi-val{font-family:var(--serif);font-size:28px;color:#60A5FA;line-height:1.0;}
+.hkpi-val.g{color:#4ADE80;}
+.hkpi-val.r{color:#FC8181;}
+.hkpi-lbl{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.05em;margin-top:4px;}
+.hkpi-sub{font-size:10px;color:rgba(255,255,255,.25);margin-top:2px;}
+
+.sec-label{font-family:var(--mono);font-size:9.5px;color:var(--acc2);letter-spacing:.10em;text-transform:uppercase;margin-bottom:6px;}
+.sec-title{font-family:var(--serif);font-size:clamp(21px,2.8vw,33px);color:var(--ink);margin-bottom:10px;line-height:1.2;}
+.sec-desc{font-size:14px;color:var(--ink2);max-width:600px;line-height:1.7;margin-bottom:28px;}
+
+.card{background:var(--surf);border:1px solid var(--bord);padding:20px;}
+.card-title{font-family:var(--mono);font-size:9.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;}
+
+/* ── THE KEY FIX ────────────────────────────────────────
+   Every Chart.js canvas needs a parent with:
+   - position: relative  (Chart.js sizes canvas absolutely inside)
+   - explicit pixel height (not auto — auto causes infinite growth)
+   - width: 100%
+   maintainAspectRatio: false then reads the parent height correctly.
+─────────────────────────────────────────────────────── */
+.chart-box{position:relative;width:100%;}
+
+.chart-wrap{background:var(--surf);border:1px solid var(--bord);padding:18px;}
+.chart-title{font-family:var(--mono);font-size:9.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px;}
+
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;}
+.cfg-card{background:var(--surf);border:1px solid var(--bord);padding:18px;position:relative;transition:box-shadow .2s;}
+.cfg-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07);}
+.cfg-card.best{border-color:var(--acc);border-top:2px solid var(--acc);}
+.cfg-card.best::before{content:'OPTIMAL';position:absolute;top:-1px;right:12px;font-family:var(--mono);font-size:7px;background:var(--acc);color:#fff;padding:2px 7px;letter-spacing:.08em;}
+.cfg-label{font-family:var(--mono);font-size:9px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.cfg-name{font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:12px;line-height:1.2;}
+.cfg-stat{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--bord);}
+.cfg-stat:last-child{border:none;}
+.cfg-stat-label{font-size:11.5px;color:var(--ink2);}
+.cfg-stat-val{font-family:var(--mono);font-size:11px;color:var(--ink);}
+.cfg-stat-val.acc{color:var(--acc2);}
+.cfg-stat-val.grn{color:var(--grn2);}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px;}
+.stat-item{padding:9px 11px;background:var(--surf2);border-left:2px solid var(--acc);}
+.stat-val{font-family:var(--serif);font-size:21px;color:var(--acc2);line-height:1.1;}
+.stat-val.g{color:var(--grn2);}
+.stat-val.a{color:var(--amb);}
+.stat-val.p{color:#7C3AED;}
+.stat-lbl{font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--ink3);margin-top:2px;}
+.stat-sub{font-size:10px;color:var(--ink3);margin-top:1px;}
+
+.check-list{margin-top:4px;}
+.check-row{display:flex;gap:9px;font-size:12px;padding:5px 0;border-bottom:1px solid var(--bord);align-items:flex-start;}
+.check-row:last-child{border:none;}
+.chk{color:var(--grn2);flex-shrink:0;font-size:13px;}
+
+.sens-table{margin-top:14px;}
+.sens-row{display:grid;grid-template-columns:110px 1fr 58px 58px;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--bord);}
+.sens-row:last-child{border:none;}
+.sens-param{font-family:var(--mono);font-size:10px;color:var(--ink2);}
+.sens-track{height:5px;background:var(--bord2);position:relative;}
+.sens-fill-l{position:absolute;right:50%;top:0;height:100%;background:var(--acc);opacity:.6;}
+.sens-fill-r{position:absolute;left:50%;top:0;height:100%;background:var(--red);opacity:.6;}
+.sens-low{font-family:var(--mono);font-size:9.5px;color:var(--ink2);text-align:right;}
+.sens-high{font-family:var(--mono);font-size:9.5px;color:var(--red);text-align:right;}
+
+/* Screenshot gallery — fully adaptive */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,430px),1fr));gap:16px;margin-top:22px;}
+.ss-card{background:var(--surf);border:1px solid var(--bord);overflow:hidden;transition:box-shadow .2s;}
+.ss-card:hover{box-shadow:0 5px 18px rgba(0,0,0,.09);}
+.ss-img-wrap{width:100%;background:#EEEAE4;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;}
+.ss-img-wrap img{width:100%;height:auto;max-height:300px;display:block;object-fit:contain;object-position:center top;transition:transform .3s ease;}
+.ss-card:hover .ss-img-wrap img{transform:scale(1.015);}
+.ss-img-placeholder{width:100%;height:150px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--ink3);background:var(--surf2);border-bottom:1px solid var(--bord);flex-direction:column;gap:5px;}
+.ss-caption{padding:11px 13px;border-top:1px solid var(--bord);}
+.ss-title{font-family:var(--mono);font-size:9px;color:var(--acc2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;}
+.ss-desc{font-size:11px;color:var(--ink2);line-height:1.5;}
+
+.timeline{position:relative;margin-top:22px;}
+.timeline::before{content:'';position:absolute;left:14px;top:8px;bottom:8px;width:1px;background:var(--bord2);}
+.tl-item{display:flex;gap:16px;margin-bottom:20px;position:relative;}
+.tl-dot{width:28px;height:28px;background:var(--acc-bg);border:1.5px solid var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--mono);font-size:9px;color:var(--acc2);z-index:1;}
+.tl-phase{font-family:var(--mono);font-size:9px;color:var(--acc2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
+.tl-title{font-size:13px;color:var(--ink);font-weight:500;margin-bottom:2px;}
+.tl-text{font-size:11.5px;color:var(--ink2);line-height:1.6;}
+
+.insight{background:var(--surf);border:1px solid var(--bord);border-left:3px solid var(--acc);padding:14px 17px;margin-bottom:9px;}
+.insight-num{font-family:var(--mono);font-size:9px;color:var(--acc2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.insight-text{font-size:13px;color:var(--ink2);line-height:1.65;}
+.insight-text strong{color:var(--ink);font-weight:500;}
+
+footer{background:var(--hero);padding:36px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;border-top:3px solid var(--acc);}
+.foot-brand{font-family:var(--serif);font-size:21px;color:#fff;}
+.foot-sub{font-family:var(--mono);font-size:10px;color:var(--hero-t2);margin-top:3px;}
+.foot-links{display:flex;gap:18px;}
+.foot-links a{font-family:var(--mono);font-size:10px;color:var(--hero-t2);text-decoration:none;letter-spacing:.04em;transition:color .2s;}
+.foot-links a:hover{color:#fff;}
+.foot-copy{font-family:var(--mono);font-size:9.5px;color:rgba(255,255,255,.22);}
+
+.fade-up{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.fade-up.visible{opacity:1;transform:none;}
+
+@media(max-width:820px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .container{padding:0 20px;}
+  .hero-kpis{grid-template-columns:1fr 1fr;}
+  .results-grid,.two-col{grid-template-columns:1fr;}
+  footer{flex-direction:column;align-items:flex-start;padding:28px 20px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Felix Okumo · Project 02</div>
+  <div class="nav-links">
+    <a href="#context">Context</a>
+    <a href="#results">Results</a>
+    <a href="#financial">Financial</a>
+    <a href="#homer">HOMER</a>
+    <a href="#methodology">Method</a>
+    <a href="#insights">Insights</a>
+  </div>
+  <a class="nav-gh" href="https://github.com/felixokumo1-stack/microgrid-adafoah-ghana.git" target="_blank">↗ GitHub</a>
+</nav>
+
+<section id="hero">
+<div class="container">
+  <div class="hero-label">MSc Mechanical Engineering · Sustainable Energy Systems · RUB Bochum</div>
+  <h1 class="hero-title">Off-Grid Hybrid<br>Microgrid Design<br><span>Ada East, Ghana</span></h1>
+  <p class="hero-sub">A full feasibility study — load profiling, resource assessment, HOMER Pro optimisation, and independent Python verification — for 500 households on a Volta estuary island.</p>
+  <div class="hero-chips">
+    <div class="hero-chip">📍 Siamekome Island · 5.7833°N, 0.6333°E</div>
+    <div class="hero-chip">📅 April 2026</div>
+    <div class="hero-chip">💰 EUR 500k Donor Budget</div>
+    <div class="hero-chip">🏠 500 Households</div>
+  </div>
+  <div class="hero-chips">
+    <span class="tool-chip">HOMER Pro</span>
+    <span class="tool-chip">Python 3</span>
+    <span class="tool-chip">windpowerlib</span>
+    <span class="tool-chip">PVGIS ERA5</span>
+    <span class="tool-chip">Renewables.ninja</span>
+    <span class="tool-chip">pandas · numpy</span>
+    <span class="tool-chip">IEC 62257</span>
+    <span class="tool-chip">IEC 61400-1</span>
+    <span class="tool-chip">GitHub</span>
+  </div>
+  <div class="hero-kpis fade-up">
+    <div class="hkpi"><div class="hkpi-val">€0.227</div><div class="hkpi-lbl">Optimal LCOE</div><div class="hkpi-sub">EUR/kWh · Config B</div></div>
+    <div class="hkpi"><div class="hkpi-val g">97.6%</div><div class="hkpi-lbl">Renewable Fraction</div><div class="hkpi-sub">PV + Wind</div></div>
+    <div class="hkpi"><div class="hkpi-val">4.7 yrs</div><div class="hkpi-lbl">Simple Payback</div><div class="hkpi-sub">vs diesel-only</div></div>
+    <div class="hkpi"><div class="hkpi-val r">0.00%</div><div class="hkpi-lbl">Loss of Power Supply</div><div class="hkpi-sub">Target ≤ 5% · Verified</div></div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section id="context">
+<div class="container fade-up">
+  <div class="sec-label">01 / Context &amp; Problem</div>
+  <h2 class="sec-title">Powering a Volta Estuary Island Community</h2>
+  <p class="sec-desc">Siamekome Island — off-grid, no feasible grid extension. This study defines the minimum-cost hybrid system meeting 24/7 supply within a EUR 500,000 donor capital budget.</p>
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Average 24-Hour Load Profile · 249,660 kWh/yr · 51.5 kW Peak</div>
+      <div class="chart-box" style="height:175px;">
+        <canvas id="loadChart"></canvas>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card">
+        <div class="card-title">Site Resource Summary</div>
+        <div class="stat-grid">
+          <div class="stat-item"><div class="stat-val">5.16</div><div class="stat-lbl">Peak Sun Hrs/day</div><div class="stat-sub">PVGIS ERA5 TMY</div></div>
+          <div class="stat-item"><div class="stat-val g">6.15</div><div class="stat-lbl">Wind m/s at 50m</div><div class="stat-sub">ERA5 primary</div></div>
+          <div class="stat-item"><div class="stat-val a">19.7%</div><div class="stat-lbl">Wind CF IEC-III</div><div class="stat-sub">vs 4.2% V80</div></div>
+          <div class="stat-item"><div class="stat-val p">−0.24</div><div class="stat-lbl">Solar-Wind Corr.</div><div class="stat-sub">Pearson · ITCZ</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Design Constraints — All Met</div>
+        <div class="check-list">
+          <div class="check-row"><span class="chk">✓</span><span>CAPEX ≤ EUR 500,000 — achieved: <strong>EUR 423,000</strong></span></div>
+          <div class="check-row"><span class="chk">✓</span><span>LPSP ≤ 5% — achieved: <strong>0.00%</strong></span></div>
+          <div class="check-row"><span class="chk">✓</span><span>Diesel backup required — <strong>60 kW genset included</strong></span></div>
+          <div class="check-row"><span class="chk">✓</span><span>Limited O&M — <strong>LFP battery + 50m hub height</strong></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section id="results">
+<div class="container fade-up">
+  <div class="sec-label">02 / Optimisation Results</div>
+  <h2 class="sec-title">Three Configurations Evaluated</h2>
+  <p class="sec-desc">HOMER Pro evaluated 500–1,730 simulations per configuration. Config B is the economic optimum — adding wind enables component downsizing that more than pays for the turbine.</p>
+  <div class="results-grid">
+    <div class="cfg-card">
+      <div class="cfg-label">Config A</div><div class="cfg-name">PV + Battery<br>+ Diesel</div>
+      <div class="cfg-stat"><span class="cfg-stat-label">PV</span><span class="cfg-stat-val">200 kWp</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Wind</span><span class="cfg-stat-val">None</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Battery</span><span class="cfg-stat-val">400 kWh LFP</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">CAPEX</span><span class="cfg-stat-val">€446,500</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">LCOE</span><span class="cfg-stat-val">€0.287/kWh</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Renewable</span><span class="cfg-stat-val">86.5%</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Annual fuel</span><span class="cfg-stat-val">11,461 L/yr</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">NPC</span><span class="cfg-stat-val">€703,858</span></div>
+    </div>
+    <div class="cfg-card best">
+      <div class="cfg-label">Config B</div><div class="cfg-name">PV + Wind<br>+ Battery + Diesel</div>
+      <div class="cfg-stat"><span class="cfg-stat-label">PV</span><span class="cfg-stat-val acc">150 kWp</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Wind</span><span class="cfg-stat-val acc">1 × 50 kW IEC-III</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Battery</span><span class="cfg-stat-val acc">300 kWh LFP</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">CAPEX</span><span class="cfg-stat-val acc">€423,000</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">LCOE</span><span class="cfg-stat-val acc">€0.227/kWh</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Renewable</span><span class="cfg-stat-val grn">97.6%</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Annual fuel</span><span class="cfg-stat-val grn">2,968 L/yr</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">NPC</span><span class="cfg-stat-val acc">€555,700</span></div>
+    </div>
+    <div class="cfg-card">
+      <div class="cfg-label">Config C</div><div class="cfg-name">PV + Wind×2<br>+ Battery + Diesel</div>
+      <div class="cfg-stat"><span class="cfg-stat-label">PV</span><span class="cfg-stat-val">120 kWp</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Wind</span><span class="cfg-stat-val">2 × 50 kW IEC-III</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Battery</span><span class="cfg-stat-val">200 kWh LFP</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">CAPEX</span><span class="cfg-stat-val">€427,000</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">LCOE</span><span class="cfg-stat-val">€0.233/kWh</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Renewable</span><span class="cfg-stat-val">97.9%</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">Annual fuel</span><span class="cfg-stat-val">2,580 L/yr</span></div>
+      <div class="cfg-stat"><span class="cfg-stat-label">NPC</span><span class="cfg-stat-val">€570,385</span></div>
+    </div>
+  </div>
+  <div class="chart-wrap" style="margin-top:18px;">
+    <div class="chart-title">LCOE cost decomposition — all three configurations (EUR/kWh)</div>
+    <div class="chart-box" style="height:145px;">
+      <canvas id="lcoeChart"></canvas>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section id="financial">
+<div class="container fade-up">
+  <div class="sec-label">03 / Financial Analysis</div>
+  <h2 class="sec-title">Config B Economics</h2>
+  <p class="sec-desc">EUR 89,849/year in savings vs diesel-only. 4.7-year payback. EUR 882k NPV over 20 years. Viable at all financing rates below 16.8%.</p>
+  <div class="two-col">
+    <div class="chart-wrap" style="margin-top:0;">
+      <div class="chart-title">20-year cumulative cost — Config B vs diesel-only (kEUR)</div>
+      <div class="chart-box" style="height:220px;">
+        <canvas id="cashChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-wrap" style="margin-top:0;">
+      <div class="chart-title">Sensitivity — ΔLCOE from base case (Config B)</div>
+      <div class="sens-table">
+        <div class="sens-row" style="border-bottom:1px solid var(--bord);padding-bottom:5px;margin-bottom:3px;">
+          <span style="font-family:var(--mono);font-size:8.5px;color:var(--ink3);text-transform:uppercase;">Parameter</span>
+          <span style="font-family:var(--mono);font-size:8.5px;color:var(--acc2);text-transform:uppercase;">Impact range</span>
+          <span style="font-family:var(--mono);font-size:8.5px;color:var(--acc2);">Low</span>
+          <span style="font-family:var(--mono);font-size:8.5px;color:var(--red);">High</span>
+        </div>
+        <div class="sens-row"><span class="sens-param">Disc. rate</span><div class="sens-track"><div class="sens-fill-l" style="width:50%"></div><div class="sens-fill-r" style="width:50%"></div></div><span class="sens-low">€0.206</span><span class="sens-high">€0.323</span></div>
+        <div class="sens-row"><span class="sens-param">PV cost</span><div class="sens-track"><div class="sens-fill-l" style="width:31%"></div><div class="sens-fill-r" style="width:31%"></div></div><span class="sens-low">€0.211</span><span class="sens-high">€0.248</span></div>
+        <div class="sens-row"><span class="sens-param">Battery</span><div class="sens-track"><div class="sens-fill-l" style="width:21%"></div><div class="sens-fill-r" style="width:21%"></div></div><span class="sens-low">€0.217</span><span class="sens-high">€0.242</span></div>
+        <div class="sens-row"><span class="sens-param">Fuel vol.</span><div class="sens-track"><div class="sens-fill-l" style="width:20%"></div><div class="sens-fill-r" style="width:20%"></div></div><span class="sens-low">€0.220</span><span class="sens-high">€0.244</span></div>
+        <div class="sens-row"><span class="sens-param">Diesel price</span><div class="sens-track"><div class="sens-fill-l" style="width:7%"></div><div class="sens-fill-r" style="width:7%"></div></div><span class="sens-low">€0.222</span><span class="sens-high">€0.238</span></div>
+      </div>
+      <div style="margin-top:12px;padding:9px 12px;background:var(--acc-bg);border:1px solid #C7D7F8;font-family:var(--mono);font-size:10.5px;color:var(--ink2);">
+        Break-even discount rate: <strong style="color:var(--acc2);">16.8%</strong> — viable under all realistic financing scenarios
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section id="homer">
+<div class="container fade-up">
+  <div class="sec-label">04 / HOMER Pro Results</div>
+  <h2 class="sec-title">Simulation Output Gallery</h2>
+  <p class="sec-desc">Direct screenshots from HOMER Pro for Config B — optimisation table, cost breakdown, generation profile, dispatch time series, and summary metrics.</p>
+  <!--
+    IMAGE PATH NOTE:
+    This file: docs/index.html
+    Images:    docs/homer_screenshots/*.png
+    Relative path from index.html → homer_screenshots/filename.png
+  -->
+  <div class="gallery-grid">
+    <div class="ss-card">
+      <div class="ss-img-wrap">
+        <img src="homer_screenshots/homer_results_table.png" alt="HOMER optimisation results table" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=ss-img-placeholder><span>📊</span><span>homer_results_table.png</span></div>'">
+      </div>
+      <div class="ss-caption"><div class="ss-title">Optimisation Results Table</div><div class="ss-desc">556+ configurations ranked by NPC. Config B top — LCOE €0.227/kWh, NPC €555,700.</div></div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-img-wrap">
+        <img src="homer_screenshots/homer_cost_summary.png" alt="HOMER cost summary" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=ss-img-placeholder><span>💰</span><span>homer_cost_summary.png</span></div>'">
+      </div>
+      <div class="ss-caption"><div class="ss-title">Cost Summary — Config B</div><div class="ss-desc">NPC breakdown: PV €191k · Battery €131k · Wind €104k · Generator €94k.</div></div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-img-wrap">
+        <img src="homer_screenshots/homer_electrical.png" alt="HOMER electrical production" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=ss-img-placeholder><span>⚡</span><span>homer_electrical.png</span></div>'">
+      </div>
+      <div class="ss-caption"><div class="ss-title">Electrical Production by Source</div><div class="ss-desc">PV 191k · Wind 129k · Diesel 6k kWh/yr. Renewable fraction 97.6%.</div></div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-img-wrap">
+        <img src="homer_screenshots/homer_monthly_generation.png" alt="HOMER monthly generation" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=ss-img-placeholder><span>📅</span><span>homer_monthly_generation.png</span></div>'">
+      </div>
+      <div class="ss-caption"><div class="ss-title">Monthly Generation Profile</div><div class="ss-desc">Wind peaks Jul–Aug (SW monsoon) when ITCZ suppresses solar — resource complementarity confirmed.</div></div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-img-wrap">
+        <img src="homer_screenshots/homer_dispatch_timeseries.png" alt="HOMER dispatch time series" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=ss-img-placeholder><span>📈</span><span>homer_dispatch_timeseries.png</span></div>'">
+      </div>
+      <div class="ss-caption"><div class="ss-title">Dispatch Time Series</div><div class="ss-desc">Hourly PV, wind, battery, diesel. Generator 307 h/yr — backup role only.</div></div>
+    </div>
+    <div class="ss-card">
+      <div class="ss-img-wrap">
+        <img src="homer_screenshots/homer_summary.png" alt="HOMER summary" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<div class=ss-img-placeholder><span>✅</span><span>homer_summary.png</span></div>'">
+      </div>
+      <div class="ss-caption"><div class="ss-title">Simulation Summary</div><div class="ss-desc">NPC €555,700 · LCOE €0.2267/kWh · Operating cost €13,516/yr · Unmet load 0 kWh/yr.</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section id="methodology">
+<div class="container fade-up">
+  <div class="sec-label">05 / Methodology</div>
+  <h2 class="sec-title">Seven-Phase Engineering Process</h2>
+  <p class="sec-desc">Full reproducible workflow. All code, data, and HOMER project files on GitHub.</p>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-dot">P0</div><div class="tl-body"><div class="tl-phase">Phase 0 — Problem Definition</div><div class="tl-title">Site lock · Load profiling · GitHub init</div><div class="tl-text">IEA MTF bottom-up load · 500 HH + anchor loads · 249,660 kWh/yr · 51.5 kW peak</div></div></div>
+    <div class="tl-item"><div class="tl-dot">P1</div><div class="tl-body"><div class="tl-phase">Phase 1 — Resource Assessment</div><div class="tl-title">PVGIS ERA5 TMY · Wind data reconciliation</div><div class="tl-text">5.16 PSH/day · ERA5/MERRA-2 32% discrepancy resolved · IEC Class III turbine mismatch corrected · Pearson r = −0.24</div></div></div>
+    <div class="tl-item"><div class="tl-dot">P2</div><div class="tl-body"><div class="tl-phase">Phase 2 — Mathematical Model</div><div class="tl-title">First-principles derivation before simulation</div><div class="tl-text">Energy balance · SOC equations · Diesel fuel curve · LPSP formula · LCOE/CRF derivation</div></div></div>
+    <div class="tl-item"><div class="tl-dot">P3</div><div class="tl-body"><div class="tl-phase">Phase 3 — HOMER Pro Optimisation</div><div class="tl-title">500–1,730 simulations per configuration</div><div class="tl-text">Search space boundary artefact corrected · Config B confirmed optimum · 97.6% renewable</div></div></div>
+    <div class="tl-item"><div class="tl-dot">P4</div><div class="tl-body"><div class="tl-phase">Phase 4 — Python Dispatch Verification</div><div class="tl-title">Independent 8760-hour simulation</div><div class="tl-text">LPSP 0.00% matched exactly · Renewable 96.0% vs HOMER 97.6% · Discrepancy diagnosed and documented</div></div></div>
+    <div class="tl-item"><div class="tl-dot">P5</div><div class="tl-body"><div class="tl-phase">Phase 5 — Techno-Economic Analysis</div><div class="tl-title">LCOE · NPV · Sensitivity — Python</div><div class="tl-text">Python LCOE within 2.5% of HOMER · Break-even 16.8% · EUR 882k NPV savings</div></div></div>
+    <div class="tl-item"><div class="tl-dot">P6</div><div class="tl-body"><div class="tl-phase">Phase 6 — Documentation</div><div class="tl-title">PROJECT_BRIEF · Portfolio · Website</div><div class="tl-text">Case study · A4 portfolio pages · This website · All committed to GitHub</div></div></div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<section id="insights">
+<div class="container fade-up">
+  <div class="sec-label">06 / Key Engineering Insights</div>
+  <h2 class="sec-title">What This Project Taught</h2>
+  <p class="sec-desc">Five findings with implications beyond this specific project.</p>
+  <div class="insight"><div class="insight-num">Insight 01 — Turbine-site class matching is critical</div><div class="insight-text">Vestas V80 (IEC Class I, rated 16 m/s) produced <strong>4.2% CF</strong> vs <strong>19.7%</strong> for IEC Class III (rated 11 m/s) — a 4.7× gap that would have made wind appear unviable. Turbine class selection must precede simulation.</div></div>
+  <div class="insight"><div class="insight-num">Insight 02 — Wind integration creates system-level value, not just generation</div><div class="insight-text">One EUR 75,000 turbine allowed <strong>EUR 95,000 in PV and battery removal</strong>, reducing total CAPEX by EUR 23,500 despite adding a component. LCOE improved 21%, NPC by EUR 148,158.</div></div>
+  <div class="insight"><div class="insight-num">Insight 03 — Diminishing returns are quantifiable before building</div><div class="insight-text">Config C's second turbine increased NPC by EUR 14,685. Only <strong>2,968 L/yr diesel</strong> remained to displace — turbine lifecycle cost (EUR 104k) exceeded fuel displacement value (EUR 25k).</div></div>
+  <div class="insight"><div class="insight-num">Insight 04 — Fuel price insensitivity is a design achievement</div><div class="insight-text"><strong>±40% diesel price swing</strong> caused only ±3.5% LCOE change at 97.6% renewable fraction. The system is structurally protected from fuel price volatility.</div></div>
+  <div class="insight"><div class="insight-num">Insight 05 — IEA MTF thresholds ≠ design consumption values</div><div class="insight-text">Using MTF minimum thresholds (200/1,000 Wh/day) produced a <strong>4× load underestimate</strong>. GOGLA 2022 typical values (500/1,500 Wh/day) are the correct design basis.</div></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<footer>
+  <div>
+    <div class="foot-brand">Felix Okumo</div>
+    <div class="foot-sub">MSc Mechanical Engineering · Sustainable Energy Systems<br>Ruhr-Universität Bochum · Germany</div>
+  </div>
+  <div class="foot-links">
+    <a href="https://github.com/felixokumo1-stack/microgrid-adafoah-ghana.git" target="_blank">↗ GitHub Repository</a>
+    <a href="#hero">↑ Back to top</a>
+  </div>
+  <div class="foot-copy">Project 02 · April 2026 · Ada East, Ghana</div>
+</footer>
+
+<script>
+const ACC='#1B4FD8',ACC2='#2563EB',GRN='#15803D',RED='#DC2626',AMB='#D97706',INK2='#44526A',BORD='#E2DDD6';
+Chart.defaults.color=INK2;
+Chart.defaults.borderColor=BORD;
+Chart.defaults.font.family="'JetBrains Mono'";
+
+// Load profile
+(function(){
+  const ctx=document.getElementById('loadChart').getContext('2d');
+  const hh  =[2.7,2.7,2.7,2.7,2.7,5.4,16.2,32.4,43.2,43.2,43.2,43.2,43.2,43.2,43.2,43.2,32.4,40.5,44.5,42.4,37.0,21.2,8.1,5.4];
+  const anch=[0,0,0,0,0,0,2,18.3,27,27,27,27,27,27,27,27,27,4,4,1,0,0,0,0];
+  new Chart(ctx,{type:'bar',data:{labels:Array.from({length:24},(_,i)=>i+'h'),datasets:[{label:'Household',data:hh,backgroundColor:ACC2+'88',stack:'s'},{label:'Anchor loads',data:anch,backgroundColor:GRN+'88',stack:'s'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:7}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:9},maxTicksLimit:12}},y:{stacked:true,grid:{color:BORD},ticks:{font:{size:9},callback:v=>v+'kW'}}}}});
+})();
+
+// LCOE stacked horizontal
+(function(){
+  const ctx=document.getElementById('lcoeChart').getContext('2d');
+  new Chart(ctx,{type:'bar',data:{labels:['Config A','Config B ★','Config C'],datasets:[{label:'Capital',data:[0.1821,0.1726,0.1742],backgroundColor:ACC+'CC',stack:'s'},{label:'O&M',data:[0.0190,0.0265,0.0355],backgroundColor:GRN+'CC',stack:'s'},{label:'Fuel',data:[0.0794,0.0206,0.0179],backgroundColor:RED+'CC',stack:'s'},{label:'Replacement',data:[0.0196,0.0151,0.0109],backgroundColor:AMB+'CC',stack:'s'}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:9}},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': €'+c.parsed.x.toFixed(3)+'/kWh'}}},scales:{x:{stacked:true,grid:{color:BORD},ticks:{font:{size:10},callback:v=>'€'+v.toFixed(2)}},y:{stacked:true,grid:{display:false},ticks:{font:{size:11}}}}}});
+})();
+
+// Cash flow
+(function(){
+  const ctx=document.getElementById('cashChart').getContext('2d');
+  const infl=0.025;let cumB=[423000],cumD=[42000];
+  for(let y=1;y<=20;y++){cumB.push(cumB[y-1]+6625+4273*Math.pow(1+infl,y-1));cumD.push(cumD[y-1]+128306*Math.pow(1+infl,y-1));}
+  new Chart(ctx,{type:'line',data:{labels:Array.from({length:21},(_,i)=>'Yr '+i),datasets:[{label:'Config B hybrid',data:cumB.map(v=>Math.round(v/1000)),borderColor:ACC2,backgroundColor:ACC2+'18',fill:true,borderWidth:2,pointRadius:0,tension:0.1},{label:'Diesel-only',data:cumD.map(v=>Math.round(v/1000)),borderColor:RED,backgroundColor:RED+'10',fill:true,borderWidth:2,pointRadius:0,tension:0.1,borderDash:[5,3]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:14,padding:9}},tooltip:{callbacks:{label:c=>'  '+c.dataset.label+': €'+c.parsed.y+'k'}}},scales:{x:{grid:{color:BORD},ticks:{font:{size:9},maxTicksLimit:10}},y:{grid:{color:BORD},ticks:{font:{size:9},callback:v=>'€'+v+'k'}}}}});
+})();
+
+// Scroll fade
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+document.querySelector('#hero .fade-up')?.classList.add('visible');
+</script>
+</body>
+</html>
